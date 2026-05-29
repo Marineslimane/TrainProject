@@ -9,7 +9,7 @@ GLBI_Engine myEngine;
 GLBI_Set_Of_Points somePoints(3);
 GLBI_Convex_2D_Shape ground{3};
 
-const int N; // size of grid (grid is a square)
+const int N {10}; // size of grid (grid is a square)
 
 void initScene() // drawing the base of the scene, the grid
 {
