@@ -22,10 +22,10 @@ void initScene() // drawing the base of the scene, the grid
 	// drawing the grid :
 	for (int i {1} ; i <= N ; i++) // ligns
 	{
-		for (int j {1} ; j <= N ; j++) // columns
+		for (int j {0} ; j < N ; j++) // columns
 		{
-			std::vector<float> square {-(N/2.f) + i*(half_nb_square), -(N/2.f)*i, 0.0,  // bottom left
-								(N/2.f)*i, -(N/2.f)*i, 0.0, // bottom right
+			std::vector<float> square {-(N/2.f) + j*(half_nb_square), (N/2.f) - i*(half_nb_square), 0.0,  // bottom left
+								-(N/2.f) + (j+1)*(half_nb_square), (N/2.f) - i*(half_nb_square), 0.0, // bottom right
 								(N/2.f)*i, (N/2.f)*i, 0.0, // top right
 								(N/2.f)*i, -(N/2.f)*i, 0.0, // top left
 			};
