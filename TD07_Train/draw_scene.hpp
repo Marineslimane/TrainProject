@@ -13,10 +13,14 @@ static const float Z_FAR {500.f};
 extern float angle_theta;      // Angle between x axis and viewpoint
 extern float angle_phy  ;      // Angle between z axis and viewpoint
 extern float dist_zoom  ;      // Distance between origin and viewpoint
+extern STP3D::IndexedMesh* meshCube;
+extern STP3D::IndexedMesh* meshCylinder;
 
 /* OpenGL Engine */
 extern GLBI_Engine myEngine;
-
+void drawRail(float posX);
+void drawBalast(float posY);
+void drawRailDroit();
 void initScene();
 
 void drawFrame();
