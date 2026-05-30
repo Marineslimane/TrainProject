@@ -18,6 +18,7 @@ extern STP3D::IndexedMesh* meshCylinder;
 
 /* OpenGL Engine */
 extern GLBI_Engine myEngine;
+
 void drawRail(float posX);
 
 void drawBalast(float posY);
