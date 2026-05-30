@@ -41,15 +41,17 @@ void initScene()
 
     meshCube = STP3D::basicCube(1.0f);
     meshCube->createVAO();
-    meshCylinder = STP3D::basicCylinder(6.0f, rr, 32);
+    meshCylinder = STP3D::basicCylinder(6.0f, rr, 32); // hauteur=6, rayon=rr
     meshCylinder->createVAO();
 }
 
 void drawRail(float posX)
 {
     myEngine.mvMatrixStack.pushMatrix();
-
-    myEngine.mvMatrixStack.addTranslation(Vector3D(posX, 5.0f, 0.6f));
+    // Le cube basicCube(1) est centré à l'origine, taille 1x1x1
+    // On translate au centre du rail : milieu en y = 5, hauteur z = sr/2
+    myEngine.mvMatrixStack.addTranslation(Vector3D(posX, 5.0f, sr / 2.0f));
+    // Scale : sr en x, 10 en y (longueur du rail), sr en z (hauteur)
     myEngine.mvMatrixStack.addHomothety(Vector3D(sr, 10.0f, sr));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.6f, 0.6f, 0.6f);
@@ -76,12 +78,9 @@ void drawRightRail()
     drawRail(POS_X_RAIL1);
     drawRail(POS_X_RAIL2);
 
-
-    float debut = sr + rr;
-    float fin = 10.0f - sr - rr;
-    float espacement = (fin - debut) / 4.0f;
+    float espacement = (10.0f - 5.0f * 2.0f * rr) / 4.0f;
     for (int i = 0; i < 5; i++) {
-        float posY = debut + i * espacement;
+        float posY = rr + i * (2.0f * rr + espacement);
         drawBalast(posY);
     }
 }
@@ -100,27 +99,6 @@ std::vector<float> bezierCurve(float t)
 
 void drawCurvedRail()
 {
-    int nb_precision {10};
-
-    for (int i = 0; i < nb_precision; i++) 
-    {
-        float t = (float)i / nb_precision;
-
-        std::vector<float> position {bezierCurve(t)};
-
-        float angle {(float)((atan2(position[0], position[1])*180.f)/M_PI)};
-
-        myEngine.mvMatrixStack.pushMatrix();
-        myEngine.mvMatrixStack.addTranslation(Vector3D(position[0], position[1], sr / 2.0f));
-    
-        myEngine.mvMatrixStack.addRotation(angle, Vector3D(0.0f, 0.0f, 1.0f));
-        myEngine.mvMatrixStack.addHomothety(Vector3D(sr, 10.0f, sr));
-        myEngine.updateMvMatrix();
-        myEngine.setFlatColor(0.6f, 0.6f, 0.6f);
-        meshCube->draw();
-        myEngine.mvMatrixStack.popMatrix();
-        myEngine.updateMvMatrix();
-    }
 }
 
 void drawScene() {
@@ -154,15 +132,11 @@ void drawScene() {
             myEngine.updateMvMatrix();
         }
     }
-<<<<<<< HEAD
 
     // drawing rails
     // right rail
-=======
-    //Rail placement
->>>>>>> 1cd3039c8a0d535605315032f7d2ebc5240a5528
     myEngine.mvMatrixStack.pushMatrix();
-    myEngine.mvMatrixStack.addTranslation(Vector3D(0.0f, 0.0f, 0.0f));
+    myEngine.mvMatrixStack.addTranslation(Vector3D(-5.0f, -5.0f, 0.0f));
     myEngine.updateMvMatrix();
     drawRightRail();
     myEngine.mvMatrixStack.popMatrix();
