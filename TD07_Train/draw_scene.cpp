@@ -10,11 +10,12 @@ GLBI_Engine myEngine;
 GLBI_Set_Of_Points somePoints(3);
 GLBI_Convex_2D_Shape ground{3};
 
-float square_size {10};
-const int N {10}; // size of grid (grid is a square)
-std::vector<GLBI_Convex_2D_Shape> grid;
+// Grid parameters
+const float square_size {10}; // size of each square of the grid
+const int N {10}; // size of grid (grid itself is a square)
+std::vector<GLBI_Convex_2D_Shape> grid; // grid is an array of squares
 
-//rails
+// Rail parameters 
 const float sr  {0.3f};
 const float rr  {0.4f};
 const float POS_X_RAIL1 {3.0f};
@@ -25,74 +26,17 @@ STP3D::IndexedMesh* meshCylinder = nullptr;
 
 void initScene()
 {
-	std::vector<float> points {0.0, 0.0, 0.0};
-    somePoints.initSet(points, 1.0, 1.0, 1.0);
+	std::vector<float> points {0.0, 0.0, 0.0}; // origin of the scene
+    somePoints.initSet(points, 1.0, 1.0, 1.0); // color of the origin point 
 
     std::vector<float> baseCarre{
         0.0, 0.0, 0.0,
-        10.0, 0.0, 0.0,
-        10.0, 10.0, 0.0,
-        0.0, 10.0, 0.0};
+        square_size, 0.0, 0.0,
+        square_size, square_size, 0.0,
+        0.0, square_size, 0.0};
 
     ground.initShape(baseCarre);
     ground.changeNature(GL_TRIANGLE_FAN);
-}
-
-
-void drawFrame() {
-	// TO DO
-}
-
-void drawBase() {
-	// TO DO
-}
-
-void drawArm() {
-	// TO DO
-}
-
-void drawPan() {
-	// TO DO
-}
-
-void drawScene() {
-    glPointSize(10.0);
-    somePoints.drawSet();
-    myEngine.setFlatColor(0.2, 0.0, 0.0);
-    ground.drawShape();
-
-	somePoints.drawSet();
-
-	// drawing the grid : 
-	for (int i = 0; i < N; i++)
-    {
-        for (int j = 0; j < N; j++)
-        {
-            myEngine.mvMatrixStack.pushMatrix();
-            // decalage des cases
-            myEngine.mvMatrixStack.addTranslation({(i - (N / 2)) * square_size,
-                                                   (j - (N / 2)) * square_size,
-                                                   0.0f});
-            myEngine.updateMvMatrix();
-
-            // cases qui alternent entre deux verts
-            if ((i + j) % 2 == 0)
-            {
-                myEngine.setFlatColor(0.31f, 0.459f, 0.267f); // vert clair
-            }
-            else
-            {
-                myEngine.setFlatColor(0.267, 0.412, 0.227); // vert foncé
-            }
-            ground.drawShape();
-
-            myEngine.mvMatrixStack.popMatrix();
-            myEngine.updateMvMatrix();
-        }
-    }
-
-	myEngine.setFlatColor(0.2,0.0,0.0);
-	ground.drawShape();
 }
 
 void drawRail(float posX)
@@ -118,7 +62,7 @@ void drawBalast(float posY)
     myEngine.mvMatrixStack.popMatrix();
 }
 
-void drawRailDroit()
+void drawRightRail()
 {
     drawRail(POS_X_RAIL1);
     drawRail(POS_X_RAIL2);
@@ -128,3 +72,35 @@ void drawRailDroit()
     }
 }
 
+void drawScene() {
+    glPointSize(10.0);
+    somePoints.drawSet(); // draws origin
+
+	// drawing the grid 
+	for (int i = 0; i < N; i++) // ligns
+    {
+        for (int j = 0; j < N; j++) // columns
+        {
+            myEngine.mvMatrixStack.pushMatrix();
+            myEngine.mvMatrixStack.addTranslation({(i - (N / 2)) * square_size,  // for the coordinates, the interval between each top corner of a square is of square_size 
+                                                   (j - (N / 2)) * square_size, // same for bottom corners
+                                                   0.0f}); // grid is drawn inside plane space Oxy
+            myEngine.updateMvMatrix();
+
+            // setting different colors to distinguish squares
+            if ((i + j) % 2 == 0)
+            {
+                myEngine.setFlatColor(0.f, 0.f, 0.f); // black
+            }
+            else
+            {
+                myEngine.setFlatColor(1.f, 1.f, 1.f); // white
+            }
+
+            ground.drawShape();
+
+            myEngine.mvMatrixStack.popMatrix();
+            myEngine.updateMvMatrix();
+        }
+    }
+}
