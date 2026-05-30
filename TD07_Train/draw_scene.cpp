@@ -75,9 +75,12 @@ void drawRightRail()
     drawRail(POS_X_RAIL1);
     drawRail(POS_X_RAIL2);
 
-    float espacement = (10.0f - 5.0f * 2.0f * rr) / 4.0f;
+
+    float debut = sr + rr;
+    float fin = 10.0f - sr - rr;
+    float espacement = (fin - debut) / 4.0f;
     for (int i = 0; i < 5; i++) {
-        float posY = rr + i * (2.0f * rr + espacement);
+        float posY = debut + i * espacement;
         drawBalast(posY);
     }
 }
@@ -113,8 +116,9 @@ void drawScene() {
             myEngine.updateMvMatrix();
         }
     }
+    //Rail placement
     myEngine.mvMatrixStack.pushMatrix();
-    myEngine.mvMatrixStack.addTranslation(Vector3D(-5.0f, -5.0f, 0.0f));
+    myEngine.mvMatrixStack.addTranslation(Vector3D(0.0f, 0.0f, 0.0f));
     myEngine.updateMvMatrix();
     drawRightRail();
     myEngine.mvMatrixStack.popMatrix();
