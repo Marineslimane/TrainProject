@@ -40,17 +40,15 @@ void initScene()
     ground.changeNature(GL_TRIANGLE_FAN);
     meshCube = STP3D::basicCube(1.0f);
     meshCube->createVAO();
-    meshCylinder = STP3D::basicCylinder(6.0f, rr, 32); // hauteur=6, rayon=rr
+    meshCylinder = STP3D::basicCylinder(6.0f, rr, 32);
     meshCylinder->createVAO();
 }
 
 void drawRail(float posX)
 {
     myEngine.mvMatrixStack.pushMatrix();
-    // Le cube basicCube(1) est centré à l'origine, taille 1x1x1
-    // On translate au centre du rail : milieu en y = 5, hauteur z = sr/2
-    myEngine.mvMatrixStack.addTranslation(Vector3D(posX, 5.0f, sr / 2.0f));
-    // Scale : sr en x, 10 en y (longueur du rail), sr en z (hauteur)
+
+    myEngine.mvMatrixStack.addTranslation(Vector3D(posX, 5.0f, 0.6f));
     myEngine.mvMatrixStack.addHomothety(Vector3D(sr, 10.0f, sr));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.6f, 0.6f, 0.6f);
