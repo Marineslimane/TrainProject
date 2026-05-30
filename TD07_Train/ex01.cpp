@@ -12,7 +12,7 @@ using namespace STP3D;
 /* Window properties */
 static const unsigned int WINDOW_WIDTH = 1200;
 static const unsigned int WINDOW_HEIGHT = 800;
-static const char WINDOW_TITLE[] = "TD04 Ex01";
+static const char WINDOW_TITLE[] = "Thomas the train";
 static float aspectRatio = 1.0f;
 
 /* Minimal time wanted between two images */

@@ -21,30 +21,33 @@ const float POS_X_RAIL2 {7.0f};
 STP3D::IndexedMesh* meshCube = nullptr;
 STP3D::IndexedMesh* meshCylinder = nullptr;
 
-void initScene() // drawing the base of the scene, the grid
+void initScene()
 {
+    // Création et upload GPU des meshes
+    meshCube = STP3D::basicCube(1.0f);
+    meshCube->createVAO();
 
-	std::vector<float> points {0.0,0.0,0.0}; // origin of the scene
-	somePoints.initSet(points,1.0,1.0,1.0); // color of the origin, here : white 
+    meshCylinder = STP3D::basicCylinder(1.0f, 1.0f);
+    meshCylinder->createVAO();
 
-	float half_nb_square {(N/2.f)/10.f};
+    std::vector<float> points {0.0, 0.0, 0.0};
+    somePoints.initSet(points, 1.0, 1.0, 1.0);
 
-	// drawing the grid :
-	for (int i {1} ; i <= N ; i++) // ligns
-	{
-		for (int j {0} ; j < N ; j++) // columns
-		{
-			std::vector<float> square {-(N/2.f) + j*(half_nb_square), (N/2.f) - i*(half_nb_square), 0.0,  // bottom left
-								-(N/2.f) + (j+1)*(half_nb_square), (N/2.f) - i*(half_nb_square), 0.0, // bottom right
-								(N/2.f)*i, (N/2.f)*i, 0.0, // top right
-								(N/2.f)*i, -(N/2.f)*i, 0.0, // top left
-			};
-
-			ground.initShape(square);
-		}
-	}
-	ground.changeNature(GL_TRIANGLE_FAN);
+    float half_nb_square {(N/2.f)/10.f};
+    for (int i {1}; i <= N; i++) {
+        for (int j {0}; j < N; j++) {
+            std::vector<float> square {
+                -(N/2.f) + j*(half_nb_square),     (N/2.f) - i*(half_nb_square), 0.0,
+                -(N/2.f) + (j+1)*(half_nb_square), (N/2.f) - i*(half_nb_square), 0.0,
+                (N/2.f)*i,  (N/2.f)*i,  0.0,
+                (N/2.f)*i, -(N/2.f)*i,  0.0,
+            };
+            ground.initShape(square);
+        }
+    }
+    ground.changeNature(GL_TRIANGLE_FAN);
 }
+
 
 void drawFrame() {
 	// TO DO
@@ -63,12 +66,12 @@ void drawPan() {
 }
 
 void drawScene() {
-	glPointSize(10.0);
+    glPointSize(10.0);
+    somePoints.drawSet();
+    myEngine.setFlatColor(0.2, 0.0, 0.0);
+    ground.drawShape();
 
-	somePoints.drawSet();
-
-	myEngine.setFlatColor(0.2,0.0,0.0);
-	ground.drawShape();
+    drawRailDroit();
 }
 
 void drawRail(float posX)
