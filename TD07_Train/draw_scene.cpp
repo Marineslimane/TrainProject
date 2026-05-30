@@ -10,6 +10,7 @@ GLBI_Engine myEngine;
 GLBI_Set_Of_Points somePoints(3);
 GLBI_Convex_2D_Shape ground{3};
 
+
 // Grid parameters
 const float square_size {10}; // size of each square of the grid
 const int N {10}; // size of grid (grid itself is a square)
@@ -77,9 +78,9 @@ void drawScene() {
     somePoints.drawSet(); // draws origin
 
 	// drawing the grid 
-	for (int i = 0; i < N; i++) // ligns
+	for (int i = 0; i < N; i++) // columns
     {
-        for (int j = 0; j < N; j++) // columns
+        for (int j = 0; j < N; j++) // ligns
         {
             myEngine.mvMatrixStack.pushMatrix();
             myEngine.mvMatrixStack.addTranslation({(i - (N / 2)) * square_size,  // for the coordinates, the interval between each top corner of a square is of square_size 
@@ -97,7 +98,7 @@ void drawScene() {
                 myEngine.setFlatColor(1.f, 1.f, 1.f); // white
             }
 
-            ground.drawShape();
+            ground.drawShape(); // draws the square 
 
             myEngine.mvMatrixStack.popMatrix();
             myEngine.updateMvMatrix();
