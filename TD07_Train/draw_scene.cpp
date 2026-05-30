@@ -38,6 +38,7 @@ void initScene()
 
     ground.initShape(baseCarre);
     ground.changeNature(GL_TRIANGLE_FAN);
+
     meshCube = STP3D::basicCube(1.0f);
     meshCube->createVAO();
     meshCylinder = STP3D::basicCylinder(6.0f, rr, 32); // hauteur=6, rayon=rr
@@ -84,6 +85,43 @@ void drawRightRail()
     }
 }
 
+std::vector<float> bezierCurve(float t)
+{
+    std::vector<float> point1 {3.0, 0.,0.};
+    std::vector<float> point2 {0., 3.0,0.};
+    std::vector<float> point3 {3.0/2.f, 3.0/2.f,0.}; // middle of the segment [point1 ; point2]
+
+    float new_x {(1-t)*(1-t)*point1[0] + 2*(1-t)*t*point2[0] + t*t*point3[0]};
+    float new_y {(1-t)*(1-t)*point1[1] + 2*(1-t)*t*point2[1] + t*t*point3[1]};
+
+    return {new_x, new_y};
+}
+
+void drawCurvedRail()
+{
+    int nb_precision {10};
+
+    for (int i = 0; i < nb_precision; i++) 
+    {
+        float t = (float)i / nb_precision;
+
+        std::vector<float> position {bezierCurve(t)};
+
+        float angle {(float)((atan2(position[0], position[1])*180.f)/M_PI)};
+
+        myEngine.mvMatrixStack.pushMatrix();
+        myEngine.mvMatrixStack.addTranslation(Vector3D(position[0], position[1], sr / 2.0f));
+    
+        myEngine.mvMatrixStack.addRotation(angle, Vector3D(0.0f, 0.0f, 1.0f));
+        myEngine.mvMatrixStack.addHomothety(Vector3D(sr, 10.0f, sr));
+        myEngine.updateMvMatrix();
+        myEngine.setFlatColor(0.6f, 0.6f, 0.6f);
+        meshCube->draw();
+        myEngine.mvMatrixStack.popMatrix();
+        myEngine.updateMvMatrix();
+    }
+}
+
 void drawScene() {
     glPointSize(10.0);
     somePoints.drawSet(); // draws origin
@@ -115,10 +153,21 @@ void drawScene() {
             myEngine.updateMvMatrix();
         }
     }
+
+    // drawing rails
+    // right rail
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(-5.0f, -5.0f, 0.0f));
     myEngine.updateMvMatrix();
     drawRightRail();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+
+    // curved rail
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(-5.0f, -5.0f, 0.0f));
+    myEngine.updateMvMatrix();
+    drawCurvedRail();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 }
