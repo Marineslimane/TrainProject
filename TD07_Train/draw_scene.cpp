@@ -17,7 +17,7 @@ std::vector<GLBI_Convex_2D_Shape> grid; // grid is an array of squares
 
 // Rail parameters 
 const float sr  {0.3f};
-const float rr  {0.4f};
+const float rr {0.2f};
 const float POS_X_RAIL1 {3.0f};
 const float POS_X_RAIL2 {7.0f}; 
 
@@ -37,38 +37,49 @@ void initScene()
 
     ground.initShape(baseCarre);
     ground.changeNature(GL_TRIANGLE_FAN);
+    meshCube = STP3D::basicCube(1.0f);
+    meshCube->createVAO();
+    meshCylinder = STP3D::basicCylinder(6.0f, rr, 32); // hauteur=6, rayon=rr
+    meshCylinder->createVAO();
 }
 
 void drawRail(float posX)
 {
     myEngine.mvMatrixStack.pushMatrix();
-    myEngine.mvMatrixStack.addTranslation(Vector3D(posX, 0.0f, 0.0f));
+    // Le cube basicCube(1) est centré à l'origine, taille 1x1x1
+    // On translate au centre du rail : milieu en y = 5, hauteur z = sr/2
+    myEngine.mvMatrixStack.addTranslation(Vector3D(posX, 5.0f, sr / 2.0f));
+    // Scale : sr en x, 10 en y (longueur du rail), sr en z (hauteur)
     myEngine.mvMatrixStack.addHomothety(Vector3D(sr, 10.0f, sr));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.6f, 0.6f, 0.6f);
     meshCube->draw();
     myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
 }
 
 void drawBalast(float posY)
 {
     myEngine.mvMatrixStack.pushMatrix();
-    myEngine.mvMatrixStack.addTranslation(Vector3D(2.0f, posY, 0.0f));
-    myEngine.mvMatrixStack.addRotation(-90.0f, Vector3D(0.0f, 0.0f, 1.0f));
-    myEngine.mvMatrixStack.addHomothety(Vector3D(rr, 6.0f, rr));
+    
+    myEngine.mvMatrixStack.addTranslation(Vector3D(8.0f, posY, rr));
+    myEngine.mvMatrixStack.addRotation(M_PI / 2.0f, Vector3D(0.0f, 0.0f, 1.0f));
+    
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.55f, 0.35f, 0.1f);
     meshCylinder->draw();
     myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
 }
-
 void drawRightRail()
 {
     drawRail(POS_X_RAIL1);
     drawRail(POS_X_RAIL2);
 
+    float espacement = (10.0f - 5.0f * 2.0f * rr) / 4.0f;
     for (int i = 0; i < 5; i++) {
-        drawBalast(sr + i * 2.0f * sr);
+        float posY = rr + i * (2.0f * rr + espacement);
+        drawBalast(posY);
     }
 }
 
@@ -103,4 +114,10 @@ void drawScene() {
             myEngine.updateMvMatrix();
         }
     }
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(-5.0f, -5.0f, 0.0f));
+    myEngine.updateMvMatrix();
+    drawRightRail();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
 }
