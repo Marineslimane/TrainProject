@@ -144,6 +144,7 @@ void drawScene() {
     }
     //Rail placement
     drawStraightTrack(5, 0.0f, 0.0f);//ligne droit
+    drawCurvedRail();
 }
 
 //track 
