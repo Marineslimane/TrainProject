@@ -45,16 +45,24 @@ void initScene()
     meshCylinder->createVAO();
 
 
-    int nb_triangles {5};
+    int nbTriangles {10};
 
     std::vector<float> topFaceVertices {};
+    float greatRadius {7.0};
+    float smallRadius {7.0 - sr};
 
-    for (int i {0} ; i < nb_triangles ; i++)
+    for (int i {0} ; i < nbTriangles ; i++)
     {
-        float angle {i*(((float)M_PI/2)/nb_triangles)};
+        float angle {i*(((float)M_PI/2)/nbTriangles)};
 
-        topFaceVertices.push_back(7.f*cos(angle)); // x coordinate
-        topFaceVertices.push_back(7.f*sin(angle)); // y coordinate
+        // nb : no need to rotate triangles since TRIANGLE_STRIP automatically joins vertices
+        // triangles along greatRadius
+        topFaceVertices.push_back(greatRadius*cos(angle)); // x coordinate
+        topFaceVertices.push_back(greatRadius*sin(angle)); // y coordinate
+        topFaceVertices.push_back(rr+sr); // z coordinate
+        // triangles along smallRadius
+        topFaceVertices.push_back(smallRadius*cos(angle)); // x coordinate
+        topFaceVertices.push_back(smallRadius*sin(angle)); // y coordinate
         topFaceVertices.push_back(rr+sr); // z coordinate
     }
     topFace.initShape(topFaceVertices);
@@ -105,9 +113,11 @@ void drawRightRail()
 void drawCurvedRail()
 {
     myEngine.mvMatrixStack.pushMatrix();
-    // just transforms + draw, no geometry building
+    myEngine.mvMatrixStack.addHomothety(Vector3D(1.5f, 1.5f, 1.5f));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(0.6f, 0.6f, 0.6f);
+    // drawing faces of the rail 
     topFace.drawShape();
-    // other faces...
     myEngine.mvMatrixStack.popMatrix();
 }
 
