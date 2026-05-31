@@ -29,3 +29,4 @@ void initScene();
 
 void drawScene();
 
+void drawStraightTrack(int nb_rails, float startX, float startY);
