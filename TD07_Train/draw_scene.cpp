@@ -9,6 +9,7 @@ float dist_zoom {40.0};      // Distance between origin and viewpoint
 GLBI_Engine myEngine;
 GLBI_Set_Of_Points somePoints(3);
 GLBI_Convex_2D_Shape ground{3};
+GLBI_Convex_2D_Shape topFace{3}; // top face of curved rail
 
 
 // Grid parameters
@@ -42,6 +43,22 @@ void initScene()
     meshCube->createVAO();
     meshCylinder = STP3D::basicCylinder(6.0f, rr, 32);
     meshCylinder->createVAO();
+
+
+    int nb_triangles {5};
+
+    std::vector<float> topFaceVertices {};
+
+    for (int i {0} ; i < nb_triangles ; i++)
+    {
+        float angle {i*(((float)M_PI/2)/nb_triangles)};
+
+        topFaceVertices.push_back(7.f*cos(angle)); // x coordinate
+        topFaceVertices.push_back(7.f*sin(angle)); // y coordinate
+        topFaceVertices.push_back(rr+sr); // z coordinate
+    }
+    topFace.initShape(topFaceVertices);
+    topFace.changeNature(GL_TRIANGLE_STRIP);
 }
 
 void drawRail(float posX)
@@ -85,6 +102,15 @@ void drawRightRail()
     }
 }
 
+void drawCurvedRail()
+{
+    myEngine.mvMatrixStack.pushMatrix();
+    // just transforms + draw, no geometry building
+    topFace.drawShape();
+    // other faces...
+    myEngine.mvMatrixStack.popMatrix();
+}
+
 void drawScene() {
     glPointSize(10.0);
     somePoints.drawSet(); // draws origin
@@ -121,6 +147,13 @@ void drawScene() {
     myEngine.mvMatrixStack.addTranslation(Vector3D(0.0f, 0.0f, 0.0f));
     myEngine.updateMvMatrix();
     drawRightRail();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(0.0f, 0.0f, 10.0f));
+    myEngine.updateMvMatrix();
+    drawCurvedRail();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 }
