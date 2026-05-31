@@ -65,7 +65,7 @@ void drawRail(float posX)
 {
     myEngine.mvMatrixStack.pushMatrix();
 
-    myEngine.mvMatrixStack.addTranslation(Vector3D(posX, 5.0f, 0.6f));
+    myEngine.mvMatrixStack.addTranslation(Vector3D(posX, 5.0f, rr+sr));
     myEngine.mvMatrixStack.addHomothety(Vector3D(sr, 10.0f, sr));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.6f, 0.6f, 0.6f);
@@ -143,17 +143,18 @@ void drawScene() {
         }
     }
     //Rail placement
-    myEngine.mvMatrixStack.pushMatrix();
-    myEngine.mvMatrixStack.addTranslation(Vector3D(0.0f, 0.0f, 0.0f));
-    myEngine.updateMvMatrix();
-    drawRightRail();
-    myEngine.mvMatrixStack.popMatrix();
-    myEngine.updateMvMatrix();
+    drawStraightTrack(5, 0.0f, 0.0f);//ligne droit
+}
 
-    myEngine.mvMatrixStack.pushMatrix();
-    myEngine.mvMatrixStack.addTranslation(Vector3D(0.0f, 0.0f, 10.0f));
-    myEngine.updateMvMatrix();
-    drawCurvedRail();
-    myEngine.mvMatrixStack.popMatrix();
-    myEngine.updateMvMatrix();
+//track 
+void drawStraightTrack(int nb_rails, float startX, float startY)
+{   
+    for (int i = 0; i < nb_rails; i++) {
+        myEngine.mvMatrixStack.pushMatrix();
+        myEngine.mvMatrixStack.addTranslation(Vector3D(startX, startY + i * square_size, 0.0f));
+        myEngine.updateMvMatrix();
+        drawRightRail();
+        myEngine.mvMatrixStack.popMatrix();
+        myEngine.updateMvMatrix();
+    }
 }
