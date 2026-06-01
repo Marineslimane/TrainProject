@@ -9,7 +9,11 @@ float dist_zoom {40.0};      // Distance between origin and viewpoint
 GLBI_Engine myEngine;
 GLBI_Set_Of_Points somePoints(3);
 GLBI_Convex_2D_Shape ground{3};
+// curved rail shapes 
 GLBI_Convex_2D_Shape topFace{3}; // top face of curved rail
+GLBI_Convex_2D_Shape bottomFace{3}; // bottom face of curved rail
+GLBI_Convex_2D_Shape leftFace{3}; // left face of curved rail
+GLBI_Convex_2D_Shape rightFace{3}; // right face of curved rail
 
 
 // Grid parameters
@@ -25,6 +29,70 @@ const float POS_X_RAIL2 {7.0f};
 
 STP3D::IndexedMesh* meshCube = nullptr;
 STP3D::IndexedMesh* meshCylinder = nullptr;
+
+void initCurvedRail()
+{
+    int nbTriangles {10};
+
+    std::vector<float> topFaceVertices {};
+    std::vector<float> bottomFaceVertices {};
+    std::vector<float> leftFaceVertices {};
+    std::vector<float> rightFaceVertices {};
+
+    float greatRadius {7.0};
+    float smallRadius {7.0 - sr};
+
+    for (int i {0} ; i < nbTriangles ; i++)
+    {
+        float angle {i*(((float)M_PI/2)/nbTriangles)};
+
+        // nb : no need to rotate triangles since TRIANGLE_STRIP automatically joins vertices
+        // triangles along greatRadius
+        topFaceVertices.push_back(greatRadius*cos(angle)); // x coordinate
+        topFaceVertices.push_back(greatRadius*sin(angle)); // y coordinate
+        topFaceVertices.push_back(rr+sr); // z coordinate
+        // triangles along smallRadius
+        topFaceVertices.push_back(smallRadius*cos(angle)); // x coordinate
+        topFaceVertices.push_back(smallRadius*sin(angle)); // y coordinate
+        topFaceVertices.push_back(rr+sr); // z coordinate
+
+        // triangles along greatRadius
+        bottomFaceVertices.push_back(greatRadius*cos(angle)); // x coordinate
+        bottomFaceVertices.push_back(greatRadius*sin(angle)); // y coordinate
+        bottomFaceVertices.push_back(rr); // z coordinate
+        // triangles along smallRadius
+        bottomFaceVertices.push_back(smallRadius*cos(angle)); // x coordinate
+        bottomFaceVertices.push_back(smallRadius*sin(angle)); // y coordinate
+        bottomFaceVertices.push_back(rr); // z coordinate
+
+        // triangles along greatRadius
+        leftFaceVertices.push_back(smallRadius*cos(angle)); // x coordinate
+        leftFaceVertices.push_back(smallRadius*sin(angle)); // y coordinate
+        leftFaceVertices.push_back(rr+sr); // z coordinate
+        // triangles along smallRadius
+        leftFaceVertices.push_back(smallRadius*cos(angle)); // x coordinate
+        leftFaceVertices.push_back(smallRadius*sin(angle)); // y coordinate
+        leftFaceVertices.push_back(rr); // z coordinate
+
+        // triangles along greatRadius
+        rightFaceVertices.push_back(greatRadius*cos(angle)); // x coordinate
+        rightFaceVertices.push_back(greatRadius*sin(angle)); // y coordinate
+        rightFaceVertices.push_back(rr+sr); // z coordinate
+        // triangles along smallRadius
+        rightFaceVertices.push_back(greatRadius*cos(angle)); // x coordinate
+        rightFaceVertices.push_back(greatRadius*sin(angle)); // y coordinate
+        rightFaceVertices.push_back(rr); // z coordinate
+    }
+
+    topFace.initShape(topFaceVertices);
+    topFace.changeNature(GL_TRIANGLE_STRIP);
+    bottomFace.initShape(bottomFaceVertices);
+    bottomFace.changeNature(GL_TRIANGLE_STRIP);
+    leftFace.initShape(leftFaceVertices);
+    leftFace.changeNature(GL_TRIANGLE_STRIP);
+    rightFace.initShape(rightFaceVertices);
+    rightFace.changeNature(GL_TRIANGLE_STRIP);
+}
 
 void initScene()
 {
@@ -44,30 +112,9 @@ void initScene()
     meshCylinder = STP3D::basicCylinder(6.0f, rr, 32);
     meshCylinder->createVAO();
 
-
-    int nbTriangles {10};
-
-    std::vector<float> topFaceVertices {};
-    float greatRadius {7.0};
-    float smallRadius {7.0 - sr};
-
-    for (int i {0} ; i < nbTriangles ; i++)
-    {
-        float angle {i*(((float)M_PI/2)/nbTriangles)};
-
-        // nb : no need to rotate triangles since TRIANGLE_STRIP automatically joins vertices
-        // triangles along greatRadius
-        topFaceVertices.push_back(greatRadius*cos(angle)); // x coordinate
-        topFaceVertices.push_back(greatRadius*sin(angle)); // y coordinate
-        topFaceVertices.push_back(rr+sr); // z coordinate
-        // triangles along smallRadius
-        topFaceVertices.push_back(smallRadius*cos(angle)); // x coordinate
-        topFaceVertices.push_back(smallRadius*sin(angle)); // y coordinate
-        topFaceVertices.push_back(rr+sr); // z coordinate
-    }
-    topFace.initShape(topFaceVertices);
-    topFace.changeNature(GL_TRIANGLE_STRIP);
+    initCurvedRail();
 }
+
 
 void drawRail(float posX)
 {
@@ -113,11 +160,14 @@ void drawRightRail()
 void drawCurvedRail()
 {
     myEngine.mvMatrixStack.pushMatrix();
-    myEngine.mvMatrixStack.addHomothety(Vector3D(1.5f, 1.5f, 1.5f));
+    // myEngine.mvMatrixStack.addHomothety(Vector3D(1.5f, 1.5f, 1.5f));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.6f, 0.6f, 0.6f);
     // drawing faces of the rail 
     topFace.drawShape();
+    bottomFace.drawShape();
+    leftFace.drawShape();
+    rightFace.drawShape();
     myEngine.mvMatrixStack.popMatrix();
 }
 
