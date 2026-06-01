@@ -308,7 +308,7 @@ void drawStraightTrack(int nbRails, float startX, float startY)
         myEngine.mvMatrixStack.pushMatrix();
         myEngine.mvMatrixStack.addTranslation(Vector3D(startX, startY + i * squareSize, 0.0f));
         myEngine.updateMvMatrix();
-        drawRightRail();
+        drawStraightRails();
         myEngine.mvMatrixStack.popMatrix();
         myEngine.updateMvMatrix();
     }
