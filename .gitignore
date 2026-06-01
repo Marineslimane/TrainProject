@@ -41,3 +41,14 @@ Makefile
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Ninja files
+*.ninja
+.ninja_deps
+.ninja_log
+build.ninja
+
+# Binaries
+*.exe
+*.out
+*.o
