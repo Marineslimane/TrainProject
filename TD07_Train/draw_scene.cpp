@@ -323,4 +323,6 @@ void drawScene() {
     // draws rails
     drawStraightTrack(5, 0.0f, 0.0f); // straight line
     drawCurvedRail();
+    drawTrainStation(2,3);
 }
+
