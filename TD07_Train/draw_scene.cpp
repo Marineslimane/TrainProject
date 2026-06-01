@@ -1,5 +1,12 @@
 #include "draw_scene.hpp"
 #include "tools/basic_mesh.hpp"
+#include "train_station.hpp"
+
+void drawRail(float posX);
+void drawBalast(float posY);
+void drawRightRail();
+void drawCurvedRail();
+void drawStraightTrack(int nb_rails, float startX, float startY);
 
 /// Camera parameters
 float angle_theta {90.0};      // Angle between x axis and viewpoint

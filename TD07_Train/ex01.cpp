@@ -44,7 +44,7 @@ void onKey(GLFWwindow* window, int key, int /*scancode*/, int action, int /*mods
 			glfwSetWindowShouldClose(window, GLFW_TRUE);
 			break;
 
-		// View modes
+		// // View modes
 		case GLFW_KEY_L:
 			if (is_pressed) glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
 			break;
@@ -95,6 +95,10 @@ int main(int /*argc*/, char** /*argv*/)
 	/* Callback to a function if an error is rised by GLFW */
 	glfwSetErrorCallback(onError);
 
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+	
 	/* Create a windowed mode window and its OpenGL context */
 	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, NULL, NULL);
 	if (!window)
