@@ -4,6 +4,8 @@ const float trainStation_WIDTH  {30.0f};
 const float trainStation_DEPTH  {20.0f};
 const float trainStation_HEIGHT {20.0f};
 
+STP3D::IndexedMesh* meshCube2;
+
 //couleur
 const float WALL_R {0.9f}, WALL_G {0.85f}, WALL_B {0.7f};
 
@@ -14,7 +16,7 @@ void drawTrainStation(float posX, float posY)
     myEngine.mvMatrixStack.addHomothety(Vector3D(trainStation_WIDTH, trainStation_DEPTH, trainStation_HEIGHT));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(WALL_R, WALL_G, WALL_B);
-    meshCube->draw();
+    meshCube2->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 }

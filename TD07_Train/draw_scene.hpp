@@ -19,24 +19,12 @@ extern STP3D::IndexedMesh* meshCylinder;
 /* OpenGL Engine */
 extern GLBI_Engine myEngine;
 
-void initCurvedRails();
-
-void initStraightRails();
-
+// init functions
 void initSquare();
 
 void initScene();
 
-void drawStraightRail(float posX);
-
-void drawBalast(float posY);
-
-void drawStraightRails();
-
-void drawCurvedRail();
-
+// draw functions
 void drawGrid();
-
-void drawStraightTrack(int nbRails, float startX, float startY);
 
 void drawScene();
