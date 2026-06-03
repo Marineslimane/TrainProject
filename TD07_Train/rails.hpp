@@ -11,7 +11,7 @@ struct Rail
 {
     // parameters
     static constexpr float sr {0.6f};
-    static constexpr float rr {0.2f};
+    static constexpr float rr {0.4f};
     static constexpr float POS_X_RAIL1 {3.0f};
     static constexpr float POS_X_RAIL2 {7.0f};
 
@@ -38,9 +38,10 @@ struct Rail
     void initStraightRails();
     void initCurvedRails();
     // draw
-    void drawCurvedRails(GLBI_Engine& myEngine);
     void drawStraightRail(GLBI_Engine& myEngine, float posX); // draws one rail
     void drawBalast(GLBI_Engine& myEngine, float posY);
     void drawStraightRails(GLBI_Engine& myEngine); // draws both rails
     void drawStraightTrack(GLBI_Engine& myEngine, int nbRails, float startX, float startY, float squareSize);
+    void drawCurvedRails(GLBI_Engine& myEngine);
+    void drawPositionnedCurvedRails(GLBI_Engine& myEngine, float startX, float startY, float squareSize, float angle);
 };

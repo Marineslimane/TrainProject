@@ -206,11 +206,25 @@ void Rail::drawCurvedRails(GLBI_Engine& myEngine)
     smallRightFace.drawShape();
     myEngine.mvMatrixStack.popMatrix();
 
-    // // ballasts
-    // myEngine.mvMatrixStack.pushMatrix();
-    // myEngine.updateMvMatrix();
-    // drawBalast(myEngine, posY);
-    // myEngine.mvMatrixStack.popMatrix();
+    // ballasts
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.updateMvMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(-sr/2, 0.0f, 0.0f));
+    myEngine.mvMatrixStack.addRotation(M_PI / 12.0f, Vector3D(0.0f, 0.0f, 1.0f));
+    drawBalast(myEngine, 0.0);
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.updateMvMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(-sr/2, 0.0f, 0.0f));
+    myEngine.mvMatrixStack.addRotation((M_PI / 12.0f)*2.5, Vector3D(0.0f, 0.0f, 1.0f));
+    drawBalast(myEngine, 0.0);
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.updateMvMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(-sr/2, 0.0f, 0.0f));
+    myEngine.mvMatrixStack.addRotation((M_PI / 12.0f)*4, Vector3D(0.0f, 0.0f, 1.0f));
+    drawBalast(myEngine, 0.0);
+    myEngine.mvMatrixStack.popMatrix();
 }
 
 void Rail::drawStraightTrack(GLBI_Engine& myEngine, int nbRails, float startX, float startY, float squareSize)
@@ -224,4 +238,15 @@ void Rail::drawStraightTrack(GLBI_Engine& myEngine, int nbRails, float startX, f
         myEngine.mvMatrixStack.popMatrix();
         myEngine.updateMvMatrix();
     }
+}
+
+void Rail::drawPositionnedCurvedRails(GLBI_Engine& myEngine, float startX, float startY, float squareSize, float angle)
+{   
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(startX, startY * squareSize, 0.0f));
+    myEngine.mvMatrixStack.addRotation(angle, Vector3D(0.0f, 0.0f, 1.0f));
+    myEngine.updateMvMatrix();
+    drawCurvedRails(myEngine);
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
 }

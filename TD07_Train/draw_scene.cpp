@@ -84,5 +84,5 @@ void drawScene()
 
     // draws rails
     rails.drawStraightTrack(myEngine, 5, 0.0f, 0.0f, squareSize); // straight line
-    rails.drawCurvedRails(myEngine);
+    rails.drawPositionnedCurvedRails(myEngine, 0.5, 0.125, squareSize, -M_PI/2);
 }
