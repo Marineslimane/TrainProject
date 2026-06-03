@@ -2,6 +2,7 @@
 #include "tools/basic_mesh.hpp"
 #include "train_station.hpp"
 #include "rails.hpp"
+#include "train.hpp"
 
 /// Camera parameters
 float angle_theta {90.0};      // Angle between x axis and viewpoint
@@ -85,4 +86,5 @@ void drawScene()
     // draws rails
     rails.drawStraightTrack(myEngine, 5, 0.0f, 0.0f, squareSize); // straight line
     rails.drawPositionnedCurvedRails(myEngine, 0.5, 0.125, squareSize, -M_PI/2);
+    drawFace(myEngine);
 }
