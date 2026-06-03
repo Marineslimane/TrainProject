@@ -39,11 +39,13 @@ void initScene()
 	std::vector<float> points {0.0, 0.0, 0.0}; // origin of the scene
     somePoints.initSet(points, 1.0, 1.0, 1.0); // color of the origin point 
 
-    // init objects 
+    // INIT OBJETS
     initSquare(); // square of grid
     // rails
     rails.initStraightRails();
     rails.initCurvedRails();
+    // train
+    initFace();
 }
 
 void drawGrid()
@@ -86,5 +88,6 @@ void drawScene()
     // draws rails
     rails.drawStraightTrack(myEngine, 5, 0.0f, 0.0f, squareSize); // straight line
     rails.drawPositionnedCurvedRails(myEngine, 0.5, 0.125, squareSize, -M_PI/2);
+    // draws train
     drawFace(myEngine);
 }
