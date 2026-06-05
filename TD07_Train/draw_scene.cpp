@@ -3,6 +3,7 @@
 #include "train_station.hpp"
 #include "rails.hpp"
 #include "train.hpp"
+#include "kenny.hpp"
 
 /// Camera parameters
 float angle_theta {90.0};      // Angle between x axis and viewpoint
@@ -45,7 +46,10 @@ void initScene()
     rails.initStraightRails();
     rails.initCurvedRails();
     // train
-    initFace();
+    //gare
+    initTrainStation();
+    //kenny
+    initKenny();
 }
 
 void drawGrid()
@@ -89,5 +93,5 @@ void drawScene()
     rails.drawStraightTrack(myEngine, 5, 0.0f, 0.0f, squareSize); // straight line
     rails.drawPositionnedCurvedRails(myEngine, 0.5, 0.125, squareSize, -M_PI/2);
     // draws train
-    drawFace(myEngine);
+    drawKenny(0.0f, 0.0f, 0.0f);
 }
