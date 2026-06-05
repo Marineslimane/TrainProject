@@ -46,6 +46,7 @@ void initScene()
     rails.initCurvedRails();
     // train
     initFace();
+    initEyebrow();
 }
 
 void drawGrid()
@@ -90,4 +91,5 @@ void drawScene()
     rails.drawPositionnedCurvedRails(myEngine, 0.5, 0.125, squareSize, -M_PI/2);
     // draws train
     drawFace(myEngine);
+    drawEyebrow(myEngine);
 }
