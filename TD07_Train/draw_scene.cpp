@@ -199,6 +199,7 @@ void initScene()
     // rails
     initStraightRails();
     initCurvedRails();
+    initTrainStation();
 }
 
 void drawStraightRail(float posX)
