@@ -23,6 +23,8 @@ void initTrainStation()
     meshSphere2->createVAO();
     meshPost = STP3D::basicCylinder(3.5f, 0.3f, 8);
     meshPost->createVAO();
+    meshCube2 = STP3D::basicCube(1.0f);
+    meshCube2->createVAO();
 }
 
 void drawBox(GLBI_Engine& myEngine, float cx, float cy, float cz,

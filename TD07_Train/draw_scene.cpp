@@ -48,6 +48,8 @@ void initScene()
     initFace();
     initEyebrow();
     initMouth();
+    // train station
+    initTrainStation();
 }
 
 void drawGrid()
@@ -95,4 +97,6 @@ void drawScene()
     drawEyebrow(myEngine);
     drawMouth(myEngine);
     drawBody(myEngine);
+    // trainstation
+    drawTrainStation(myEngine, 60.0, 10.0);
 }
