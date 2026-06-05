@@ -9,10 +9,10 @@ const float WALL_R  {0.502f},  WALL_G  {0.38f}, WALL_B  {0.204f};
 const float PLANK_R {0.65f}, PLANK_G {0.51f},  PLANK_B {0.3f};
 const float BASE_R{0.329f}, BASE_G{0.294f}, BASE_B{0.243f};
 
-STP3D::IndexedMesh*  meshPillar = nullptr;
-STP3D::IndexedMesh*  meshSphere = nullptr;
-STP3D::StandardMesh* meshRect   = nullptr;
-STP3D::IndexedMesh*  meshPost   = nullptr;
+STP3D::IndexedMesh* meshPillar = nullptr;
+STP3D::IndexedMesh* meshSphere = nullptr;
+STP3D::StandardMesh* meshRect = nullptr;
+STP3D::IndexedMesh* meshPost = nullptr;
 
 void initTrainStation()
 {
@@ -54,6 +54,8 @@ void drawTrainStation(float posX, float posY)
 {
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(posX, posY, 0.0f));
+    myEngine.mvMatrixStack.addRotation(M_PI / 2.0f, Vector3D(0.0f, 0.0f, 1.0f));
+    myEngine.mvMatrixStack.addHomothety(10.0f / W); 
     myEngine.updateMvMatrix();
 
     //quai
