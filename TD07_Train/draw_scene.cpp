@@ -42,86 +42,10 @@ void initScene()
     // INIT OBJETS
     initSquare(); // square of grid
     // rails
-<<<<<<< HEAD
-    initStraightRails();
-    initCurvedRails();
-    initTrainStation();
-}
-
-void drawStraightRail(float posX)
-{
-    myEngine.mvMatrixStack.pushMatrix();
-
-    myEngine.mvMatrixStack.addTranslation(Vector3D(posX, 5.0f, rr+sr));
-    myEngine.mvMatrixStack.addHomothety(Vector3D(sr, 10.0f, sr));
-
-    myEngine.updateMvMatrix();
-    myEngine.setFlatColor(0.6f, 0.6f, 0.6f);
-    meshCube->draw();
-    myEngine.mvMatrixStack.popMatrix();
-    myEngine.updateMvMatrix();
-}
-
-void drawBalast(float posY)
-{
-    myEngine.mvMatrixStack.pushMatrix();
-    
-    myEngine.mvMatrixStack.addTranslation(Vector3D(8.0f, posY, rr));
-    myEngine.mvMatrixStack.addRotation(M_PI / 2.0f, Vector3D(0.0f, 0.0f, 1.0f));
-    
-    myEngine.updateMvMatrix();
-    myEngine.setFlatColor(0.55f, 0.35f, 0.1f);
-    meshCylinder->draw();
-    myEngine.mvMatrixStack.popMatrix();
-    myEngine.updateMvMatrix();
-}
-
-void drawStraightRails()
-{
-    drawStraightRail(POS_X_RAIL1);
-    drawStraightRail(POS_X_RAIL2);
-
-    float start = sr + rr;
-    float end = 10.0f - sr - rr;
-    float gap = (end - start) / 4.0f; // test
-    for (int i = 0; i < 5; i++) { 
-        float posY = start + i * gap;
-        drawBalast(posY);
-    }
-}
-
-void drawCurvedRail()
-{
-    // great part
-    myEngine.mvMatrixStack.pushMatrix();
-    // myEngine.mvMatrixStack.addHomothety(Vector3D(1.5f, 1.5f, 1.5f));
-    myEngine.updateMvMatrix();
-    myEngine.setFlatColor(0.6f, 0.6f, 0.6f);
-    // drawing faces of the rail 
-    greatTopFace.drawShape();
-    greatBottomFace.drawShape();
-    greatLeftFace.drawShape();
-    greatRightFace.drawShape();
-    myEngine.mvMatrixStack.popMatrix();
-
-    // small part
-    myEngine.mvMatrixStack.pushMatrix();
-    // myEngine.mvMatrixStack.addHomothety(Vector3D(1.5f, 1.5f, 1.5f));
-    myEngine.updateMvMatrix();
-    myEngine.setFlatColor(0.6f, 0.6f, 0.6f);
-    // drawing faces of the rail 
-    smallTopFace.drawShape();
-    smallBottomFace.drawShape();
-    smallLeftFace.drawShape();
-    smallRightFace.drawShape();
-    myEngine.mvMatrixStack.popMatrix();
-
-=======
     rails.initStraightRails();
     rails.initCurvedRails();
     // train
     initFace();
->>>>>>> e96507971741d0c8921631513d21a705d4206c00
 }
 
 void drawGrid()
@@ -162,16 +86,8 @@ void drawScene()
     drawGrid(); // draws grid
 
     // draws rails
-<<<<<<< HEAD
-    drawStraightTrack(5, 0.0f, 0.0f); // straight line
-    drawCurvedRail();
-    drawTrainStation(2,3);
-}
-
-=======
     rails.drawStraightTrack(myEngine, 5, 0.0f, 0.0f, squareSize); // straight line
     rails.drawPositionnedCurvedRails(myEngine, 0.5, 0.125, squareSize, -M_PI/2);
     // draws train
     drawFace(myEngine);
 }
->>>>>>> e96507971741d0c8921631513d21a705d4206c00

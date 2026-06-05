@@ -10,21 +10,22 @@ const float PLANK_R {0.65f}, PLANK_G {0.51f},  PLANK_B {0.3f};
 const float BASE_R{0.329f}, BASE_G{0.294f}, BASE_B{0.243f};
 
 STP3D::IndexedMesh* meshPillar = nullptr;
-STP3D::IndexedMesh* meshSphere = nullptr;
+STP3D::IndexedMesh* meshSphere2 = nullptr;
 STP3D::StandardMesh* meshRect = nullptr;
 STP3D::IndexedMesh* meshPost = nullptr;
+STP3D::IndexedMesh* meshCube2 = nullptr;
 
 void initTrainStation()
 {
     meshPillar = STP3D::basicCylinder(H * 0.72f, 1.2f, 16);
     meshPillar->createVAO();
-    meshSphere = STP3D::basicSphere(1.5f, 8, 8);
-    meshSphere->createVAO();
+    meshSphere2 = STP3D::basicSphere(1.5f, 8, 8);
+    meshSphere2->createVAO();
     meshPost = STP3D::basicCylinder(3.5f, 0.3f, 8);
     meshPost->createVAO();
 }
 
-void drawBox(float cx, float cy, float cz,
+void drawBox(GLBI_Engine& myEngine, float cx, float cy, float cz,
              float sx, float sy, float sz,
              float r, float g, float b)
 {
@@ -33,12 +34,12 @@ void drawBox(float cx, float cy, float cz,
     myEngine.mvMatrixStack.addHomothety(Vector3D(sx, sy, sz));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(r, g, b);
-    meshCube->draw();
+    meshCube2->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 }
 
-void drawCylinder(float cx, float cy, float cz, float r, float g, float b)
+void drawCylinder(GLBI_Engine& myEngine, float cx, float cy, float cz, float r, float g, float b)
 {
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(cx, cy, cz));
@@ -50,7 +51,7 @@ void drawCylinder(float cx, float cy, float cz, float r, float g, float b)
     myEngine.updateMvMatrix();
 }
 
-void drawTrainStation(float posX, float posY)
+void drawTrainStation(GLBI_Engine& myEngine, float posX, float posY)
 {
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(posX, posY, 0.0f));
@@ -59,18 +60,18 @@ void drawTrainStation(float posX, float posY)
     myEngine.updateMvMatrix();
 
     //quai
-    drawBox(-3.0f + (W+6)/2.0f, (D+8)/2.0f - 9.0f, 0.0f,W+6, D+8, 2.0f,BASE_R, BASE_G, BASE_B);
+    drawBox(myEngine, -3.0f + (W+6)/2.0f, (D+8)/2.0f - 9.0f, 0.0f,W+6, D+8, 2.0f,BASE_R, BASE_G, BASE_B);
     //murs
-    drawBox(W/2, D/2, H/2, W, D, H, WALL_R, WALL_G, WALL_B);
+    drawBox(myEngine, W/2, D/2, H/2, W, D, H, WALL_R, WALL_G, WALL_B);
     //planches
     int nb_planches = 12;
     float planche_h = H / nb_planches;
     for (int i = 0; i < nb_planches; i++) {
         float z = planche_h * i + planche_h / 2.0f;
-        drawBox(W/2,   -0.1f, z, W+0.2f,   0.3f, planche_h*0.8f, PLANK_R, PLANK_G, PLANK_B);
-        drawBox(W/2, D+0.1f, z, W+0.2f,   0.3f, planche_h*0.8f, PLANK_R, PLANK_G, PLANK_B);
-        drawBox(-0.1f,  D/2, z,   0.3f, D+0.2f, planche_h*0.8f, PLANK_R, PLANK_G, PLANK_B);
-        drawBox(W+0.1f, D/2, z,   0.3f, D+0.2f, planche_h*0.8f, PLANK_R, PLANK_G, PLANK_B);
+        drawBox(myEngine, W/2,   -0.1f, z, W+0.2f,   0.3f, planche_h*0.8f, PLANK_R, PLANK_G, PLANK_B);
+        drawBox(myEngine, W/2, D+0.1f, z, W+0.2f,   0.3f, planche_h*0.8f, PLANK_R, PLANK_G, PLANK_B);
+        drawBox(myEngine, -0.1f,  D/2, z,   0.3f, D+0.2f, planche_h*0.8f, PLANK_R, PLANK_G, PLANK_B);
+        drawBox(myEngine, W+0.1f, D/2, z,   0.3f, D+0.2f, planche_h*0.8f, PLANK_R, PLANK_G, PLANK_B);
     }
 
     //toit
@@ -80,7 +81,7 @@ void drawTrainStation(float posX, float posY)
     myEngine.mvMatrixStack.addHomothety(Vector3D(W/2+4, D+4, 0.8f));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(PLANK_R, PLANK_G, PLANK_B);
-    meshCube->draw();
+    meshCube2->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
@@ -90,12 +91,12 @@ void drawTrainStation(float posX, float posY)
     myEngine.mvMatrixStack.addHomothety(Vector3D(W/2+4, D+4, 0.8f));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(PLANK_R, PLANK_G, PLANK_B);
-    meshCube->draw();
+    meshCube2->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
     //faitiere
-    drawBox(W/2, D/2, H+7.5f, 1.0f, D+4, 1.0f,
+    drawBox(myEngine, W/2, D/2, H+7.5f, 1.0f, D+4, 1.0f,
             PLANK_R*0.8f, PLANK_G*0.8f, PLANK_B*0.8f);
 
     //sphere
@@ -103,23 +104,23 @@ void drawTrainStation(float posX, float posY)
     myEngine.mvMatrixStack.addTranslation(Vector3D(W/2, D/2, H+9.0f));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(PLANK_R*0.7f, PLANK_G*0.7f, PLANK_B*0.3f);
-    meshSphere->draw();
+    meshSphere2->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
     //auvent
-    drawBox(W/2, -3.0f, H*0.75f, W*0.85f, 6.0f, 1.5f, BASE_R, BASE_G, BASE_B);
+    drawBox(myEngine, W/2, -3.0f, H*0.75f, W*0.85f, 6.0f, 1.5f, BASE_R, BASE_G, BASE_B);
 
     //colonnes
-    drawCylinder(W*0.25f, -4.0f, 0.0f, WALL_R, WALL_G, WALL_B);
-    drawCylinder(W*0.75f, -4.0f, 0.0f, WALL_R, WALL_G, WALL_B);
+    drawCylinder(myEngine, W*0.25f, -4.0f, 0.0f, WALL_R, WALL_G, WALL_B);
+    drawCylinder(myEngine, W*0.75f, -4.0f, 0.0f, WALL_R, WALL_G, WALL_B);
 
     //porte
-    drawBox(W/2, -0.3f, H*0.3f, W*0.18f, 0.5f, H*0.6f, BASE_R, BASE_G, BASE_B);
+    drawBox(myEngine, W/2, -0.3f, H*0.3f, W*0.18f, 0.5f, H*0.6f, BASE_R, BASE_G, BASE_B);
 
     //barriere
     //Barre horizontale
-    drawBox(W*0.30f, -7.0f, 3.5f, W*0.65f, 0.5f, 0.5f, WALL_R, WALL_G, WALL_B);
+    drawBox(myEngine, W*0.30f, -7.0f, 3.5f, W*0.65f, 0.5f, 0.5f, WALL_R, WALL_G, WALL_B);
     
     //poteaux
     for (int i = 0; i < 8; i++) {
