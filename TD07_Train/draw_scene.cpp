@@ -47,6 +47,7 @@ void initScene()
     // train
     initFace();
     initEyebrow();
+    initMouth();
 }
 
 void drawGrid()
@@ -92,4 +93,6 @@ void drawScene()
     // draws train
     drawFace(myEngine);
     drawEyebrow(myEngine);
+    drawMouth(myEngine);
+    drawBody(myEngine);
 }

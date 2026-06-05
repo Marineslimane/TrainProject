@@ -1,365 +1,316 @@
-#include "draw_scene.hpp"
 #include "tools/basic_mesh.hpp"
-#include "train_station.hpp"
-#include "rails.hpp"
+#include "train.hpp"
 
-/// Camera parameters
-float angle_theta {90.0};      // Angle between x axis and viewpoint
-float angle_phy {80.0};      // Angle between z axis and viewpoint
-float dist_zoom {40.0};      // Distance between origin and viewpoint
+STP3D::IndexedMesh* meshSphere;
+STP3D::IndexedMesh* meshCylinder;
 
-GLBI_Engine myEngine;
-GLBI_Set_Of_Points somePoints(3);
-GLBI_Convex_2D_Shape square{3}; // for grid squares
-// curved rails shapes 
-// for great rail
-GLBI_Convex_2D_Shape greatTopFace{3}; // top face of great curved rail
-GLBI_Convex_2D_Shape greatBottomFace{3}; // bottom face of great curved rail
-GLBI_Convex_2D_Shape greatLeftFace{3}; // left face of great curved rail
-GLBI_Convex_2D_Shape greatRightFace{3}; // right face of great curved rail
-// for small rail
-GLBI_Convex_2D_Shape smallTopFace{3}; // top face of small curved rail
-GLBI_Convex_2D_Shape smallBottomFace{3}; // bottom face of small curved rail
-GLBI_Convex_2D_Shape smallLeftFace{3}; // left face of small curved rail
-GLBI_Convex_2D_Shape smallRightFace{3}; // right face of small curved rail
+GLBI_Convex_2D_Shape eyebrow{3};
+GLBI_Convex_2D_Shape mouth{3};
 
-// Grid parameters
-const float squareSize {10}; // size of each square of the grid
-const int N {10}; // size of grid (grid itself is a square)
-std::vector<GLBI_Convex_2D_Shape> grid; // grid is an array of squares
+// colors :
+float lightGrey {0.85};
+float darkGrey {0.8};
+float blue {0.8};
 
-// Rail parameters 
-const float sr  {0.3f};
-const float rr {0.2f};
-const float POS_X_RAIL1 {3.0f};
-const float POS_X_RAIL2 {7.0f}; 
-
-STP3D::IndexedMesh* meshCube = nullptr;
-STP3D::IndexedMesh* meshCylinder = nullptr;
-
-void initCurvedRails()
+void initFace()
 {
-    int nbTriangles {10}; // number of triangles used to draw rails
+    meshSphere = STP3D::basicSphere(5.8f, 60, 60); // radius, smoothness of vertical lines, smoothness of horizontal lines
+    meshSphere->createVAO();
 
-    // great rail
-    std::vector<float> greatTopFaceVertices {};
-    std::vector<float> greatBottomFaceVertices {};
-    std::vector<float> greatLeftFaceVertices {};
-    std::vector<float> greatRightFaceVertices {};
-
-    float greatRadius {7.0};
-    float smallRadius {7.0 - sr};
-
-    for (int i {0} ; i < nbTriangles ; i++)
-    {
-        float angle {i*(((float)M_PI/2)/nbTriangles)};
-
-        // nb : no need to rotate triangles since TRIANGLE_STRIP automatically joins vertices
-        // triangles along greatRadius
-        greatTopFaceVertices.push_back(greatRadius*cos(angle)); // x coordinate
-        greatTopFaceVertices.push_back(greatRadius*sin(angle)); // y coordinate
-        greatTopFaceVertices.push_back(rr+sr); // z coordinate
-        // triangles along smallRadius
-        greatTopFaceVertices.push_back(smallRadius*cos(angle)); // x coordinate
-        greatTopFaceVertices.push_back(smallRadius*sin(angle)); // y coordinate
-        greatTopFaceVertices.push_back(rr+sr); // z coordinate
-
-        // triangles along greatRadius
-        greatBottomFaceVertices.push_back(greatRadius*cos(angle)); // x coordinate
-        greatBottomFaceVertices.push_back(greatRadius*sin(angle)); // y coordinate
-        greatBottomFaceVertices.push_back(rr); // z coordinate
-        // triangles along smallRadius
-        greatBottomFaceVertices.push_back(smallRadius*cos(angle)); // x coordinate
-        greatBottomFaceVertices.push_back(smallRadius*sin(angle)); // y coordinate
-        greatBottomFaceVertices.push_back(rr); // z coordinate
-
-        // triangles along greatRadius
-        greatLeftFaceVertices.push_back(smallRadius*cos(angle)); // x coordinate
-        greatLeftFaceVertices.push_back(smallRadius*sin(angle)); // y coordinate
-        greatLeftFaceVertices.push_back(rr+sr); // z coordinate
-        // triangles along smallRadius
-        greatLeftFaceVertices.push_back(smallRadius*cos(angle)); // x coordinate
-        greatLeftFaceVertices.push_back(smallRadius*sin(angle)); // y coordinate
-        greatLeftFaceVertices.push_back(rr); // z coordinate
-
-        // triangles along greatRadius
-        greatRightFaceVertices.push_back(greatRadius*cos(angle)); // x coordinate
-        greatRightFaceVertices.push_back(greatRadius*sin(angle)); // y coordinate
-        greatRightFaceVertices.push_back(rr+sr); // z coordinate
-        // triangles along smallRadius
-        greatRightFaceVertices.push_back(greatRadius*cos(angle)); // x coordinate
-        greatRightFaceVertices.push_back(greatRadius*sin(angle)); // y coordinate
-        greatRightFaceVertices.push_back(rr); // z coordinate
-    }
-
-    greatTopFace.initShape(greatTopFaceVertices);
-    greatTopFace.changeNature(GL_TRIANGLE_STRIP);
-    greatBottomFace.initShape(greatBottomFaceVertices);
-    greatBottomFace.changeNature(GL_TRIANGLE_STRIP);
-    greatLeftFace.initShape(greatLeftFaceVertices);
-    greatLeftFace.changeNature(GL_TRIANGLE_STRIP);
-    greatRightFace.initShape(greatRightFaceVertices);
-    greatRightFace.changeNature(GL_TRIANGLE_STRIP);
-
-    // small rail
-    // nb : using same number of triangles for great and small rail
-
-    std::vector<float> smallTopFaceVertices {};
-    std::vector<float> smallBottomFaceVertices {};
-    std::vector<float> smallLeftFaceVertices {};
-    std::vector<float> smallRightFaceVertices {};
-
-    float greatRadius2 {3.0};
-    float smallRadius2 {3.0 - sr};
-
-    for (int i {0} ; i < nbTriangles ; i++)
-    {
-        float angle {i*(((float)M_PI/2)/nbTriangles)};
-
-        // nb : no need to rotate triangles since TRIANGLE_STRIP automatically joins vertices
-        // triangles along greatRadius2
-        smallTopFaceVertices.push_back(greatRadius2*cos(angle)); // x coordinate
-        smallTopFaceVertices.push_back(greatRadius2*sin(angle)); // y coordinate
-        smallTopFaceVertices.push_back(rr+sr); // z coordinate
-        // triangles along smallRadius2
-        smallTopFaceVertices.push_back(smallRadius2*cos(angle)); // x coordinate
-        smallTopFaceVertices.push_back(smallRadius2*sin(angle)); // y coordinate
-        smallTopFaceVertices.push_back(rr+sr); // z coordinate
-
-        // triangles along greatRadius2
-        smallBottomFaceVertices.push_back(greatRadius2*cos(angle)); // x coordinate
-        smallBottomFaceVertices.push_back(greatRadius2*sin(angle)); // y coordinate
-        smallBottomFaceVertices.push_back(rr); // z coordinate
-        // triangles along smallRadius2
-        smallBottomFaceVertices.push_back(smallRadius2*cos(angle)); // x coordinate
-        smallBottomFaceVertices.push_back(smallRadius2*sin(angle)); // y coordinate
-        smallBottomFaceVertices.push_back(rr); // z coordinate
-
-        // triangles along greatRadius2
-        smallLeftFaceVertices.push_back(smallRadius2*cos(angle)); // x coordinate
-        smallLeftFaceVertices.push_back(smallRadius2*sin(angle)); // y coordinate
-        smallLeftFaceVertices.push_back(rr+sr); // z coordinate
-        // triangles along smallRadius2
-        smallLeftFaceVertices.push_back(smallRadius2*cos(angle)); // x coordinate
-        smallLeftFaceVertices.push_back(smallRadius2*sin(angle)); // y coordinate
-        smallLeftFaceVertices.push_back(rr); // z coordinate
-
-        // triangles along greatRadius2
-        smallRightFaceVertices.push_back(greatRadius2*cos(angle)); // x coordinate
-        smallRightFaceVertices.push_back(greatRadius2*sin(angle)); // y coordinate
-        smallRightFaceVertices.push_back(rr+sr); // z coordinate
-        // triangles along smallRadius2
-        smallRightFaceVertices.push_back(greatRadius2*cos(angle)); // x coordinate
-        smallRightFaceVertices.push_back(greatRadius2*sin(angle)); // y coordinate
-        smallRightFaceVertices.push_back(rr); // z coordinate
-    }
-
-    smallTopFace.initShape(smallTopFaceVertices);
-    smallTopFace.changeNature(GL_TRIANGLE_STRIP);
-    smallBottomFace.initShape(smallBottomFaceVertices);
-    smallBottomFace.changeNature(GL_TRIANGLE_STRIP);
-    smallLeftFace.initShape(smallLeftFaceVertices);
-    smallLeftFace.changeNature(GL_TRIANGLE_STRIP);
-    smallRightFace.initShape(smallRightFaceVertices);
-    smallRightFace.changeNature(GL_TRIANGLE_STRIP);
-}
-
-void initStraightRails()
-{
-    meshCube = STP3D::basicCube(1.0f);
-    meshCube->createVAO();
-    meshCylinder = STP3D::basicCylinder(6.0f, rr, 32);
+    meshCylinder = STP3D::basicCylinder(30, 5, 60, 1); // height, radius, div_round, div_height
     meshCylinder->createVAO();
 }
 
-void initSquare()
+void initEyebrow()
 {
-    std::vector<float> squareVertices{
-        0.0, 0.0, 0.0,
-        squareSize, 0.0, 0.0,
-        squareSize, squareSize, 0.0,
-        0.0, squareSize, 0.0};
+    std::vector<float> eyebrowVertices {
+        -1.0f,  0.0f,  0.0f,  // bottom-left
+         1.0f, 0.0f,  0.0f,  // bottom-right
+        0.0f,  0.0f,  1.0f   // top
+    };
 
-    square.initShape(squareVertices);
-    square.changeNature(GL_TRIANGLE_FAN);
+    eyebrow.initShape(eyebrowVertices);
+    eyebrow.changeNature(GL_TRIANGLE_STRIP);
 }
 
-void initScene()
+void initMouth()
 {
-	std::vector<float> points {0.0, 0.0, 0.0}; // origin of the scene
-    somePoints.initSet(points, 1.0, 1.0, 1.0); // color of the origin point 
+    std::vector<float> mouthVertices {
+        -1.0f,  0.0f,  1.0f,  // bottom-left
+         1.0f, 0.0f,  1.0f,  // bottom-right
+        0.0f,  0.0f,  0.0f   // top
+    };
 
-    // init objects 
-    initSquare(); // square of grid
-    // rails
-    initStraightRails();
-    initCurvedRails();
+    mouth.initShape(mouthVertices);
+    mouth.changeNature(GL_TRIANGLE_STRIP);
 }
 
-void drawStraightRail(float posX)
+void drawMouth(GLBI_Engine& myEngine)
 {
     myEngine.mvMatrixStack.pushMatrix();
-
-    myEngine.mvMatrixStack.addTranslation(Vector3D(posX, 5.0f, rr+sr));
-    myEngine.mvMatrixStack.addHomothety(Vector3D(sr, 10.0f, sr));
-
+    // myEngine.mvMatrixStack.addRotation(-M_PI/120, Vector3D(0.0, 0.1, 0.0));
+    myEngine.mvMatrixStack.addTranslation(Vector3D(0.0, 4.5f, 6.0f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(2.5, 3.0, 1.25));
     myEngine.updateMvMatrix();
-    myEngine.setFlatColor(0.6f, 0.6f, 0.6f);
-    meshCube->draw();
+    myEngine.setFlatColor(1.0, 1.0, 1.0);  
+    mouth.drawShape();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+
+    // shadow
+    myEngine.mvMatrixStack.pushMatrix();
+    // myEngine.mvMatrixStack.addRotation(-M_PI/120, Vector3D(0.0, 0.1, 0.0));
+    myEngine.mvMatrixStack.addTranslation(Vector3D(0.0, 4.7f, 5.7f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(2.5, 3.0, 1.25));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(darkGrey, darkGrey, darkGrey);  
+    mouth.drawShape();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 }
 
-void drawBalast(float posY)
+void drawEyebrow(GLBI_Engine& myEngine)
 {
+    // left
     myEngine.mvMatrixStack.pushMatrix();
-    
-    myEngine.mvMatrixStack.addTranslation(Vector3D(8.0f, posY, rr));
-    myEngine.mvMatrixStack.addRotation(M_PI / 2.0f, Vector3D(0.0f, 0.0f, 1.0f));
-    
+    myEngine.mvMatrixStack.addTranslation(Vector3D(-2.25f, 4.5f, 13.25f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(1.0, 1.0, 0.75));
+    myEngine.mvMatrixStack.addRotation(-M_PI/12, Vector3D(0.0, 1.0, 0.0));
     myEngine.updateMvMatrix();
-    myEngine.setFlatColor(0.55f, 0.35f, 0.1f);
+    myEngine.setFlatColor(0.0, 0.0, 0.0);
+    eyebrow.drawShape();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+    // right A MODIFIER
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(2.25f, 4.5f, 13.25f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(1.0, 1.0, 0.75));
+    myEngine.mvMatrixStack.addRotation(M_PI/12, Vector3D(0.0, 1.0, 0.0));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(0.0, 0.0, 0.0);
+    eyebrow.drawShape();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+}
+
+void drawFace(GLBI_Engine& myEngine)
+{
+    // // base cylinder of face (for neck and overall shape)
+    // myEngine.mvMatrixStack.pushMatrix();
+    // myEngine.mvMatrixStack.addTranslation(Vector3D(0, 5.0f, 10.0f));
+    // myEngine.mvMatrixStack.addHomothety(Vector3D(1.0, 0.5, 1.0));
+    // myEngine.updateMvMatrix();
+    // myEngine.setFlatColor(0.5, 0.5, 0.5);
+    // meshCylinder->draw();
+    // myEngine.mvMatrixStack.popMatrix();
+    // myEngine.updateMvMatrix();
+
+    // base sphere of face (for round appearance of face, especially on the side)
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(0, 7.0f, 10.0f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(1.0, 0.5, 1.0));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(lightGrey, lightGrey, lightGrey);   
+    meshSphere->draw();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+
+    // top black cylinder on neck
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(0, 6.5f, 10.0f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(1.2, 0.4, 1.2));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(0.f, 0.f, 0.f);
+    meshCylinder->draw();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+
+    // tailpipe
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addRotation(M_PI/2, Vector3D(1.0, 0.0, 0.0));
+    myEngine.mvMatrixStack.addTranslation(Vector3D(0, 15.0f, -15.0f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(0.3, 0.2, 0.4));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(0.f, 0.f, 0.f);
+    meshCylinder->draw();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+
+    // EYES
+    // WHITE PART (base)
+    // left base
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(-2.0, 5.0f, 11.0f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(0.3, 0.2, 0.3));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(1.0, 1.0, 1.0);
+    meshSphere->draw();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+    // left base shadow
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(-2.0, 5.2f, 11.5f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(0.3, 0.2, 0.3));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(darkGrey, darkGrey, darkGrey);
+    meshSphere->draw();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+
+    // right base
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(2.0, 5.0f, 11.0f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(0.3, 0.2, 0.3));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(1.0, 1.0, 1.0);
+    meshSphere->draw();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+    // right base shadow
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(2.0, 5.2f, 11.5f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(0.3, 0.2, 0.3));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(darkGrey, darkGrey, darkGrey);
+    meshSphere->draw();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+    // PUPIL
+    // right pupil
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addRotation(-M_PI/120, Vector3D(0.0, 0.1, 0.0));
+    myEngine.mvMatrixStack.addTranslation(Vector3D(2.5, 4.0f, 10.5f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(0.125, 0.1, 0.125));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(0.0, 0.0, 0.0);
+    meshSphere->draw();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+
+    // left pupil
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addRotation(M_PI/120, Vector3D(0.0, 0.1, 0.0));
+    myEngine.mvMatrixStack.addTranslation(Vector3D(-2.5, 4.0f, 10.5f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(0.125, 0.1, 0.125));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(0.0, 0.0, 0.0);
+    meshSphere->draw();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+    // LIGHT
+    // right light in the eye
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addRotation(-M_PI/72, Vector3D(0.0, 0.001, 0.0));
+    myEngine.mvMatrixStack.addTranslation(Vector3D(2.5, 3.5f, 10.95f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(0.05, 0.04, 0.05));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(1.0, 1.0, 1.0);
+    meshSphere->draw();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+
+    // left light in the eye
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(-2.5, 3.5f, 11.0f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(0.05, 0.04, 0.05));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(1.0, 1.0, 1.0);
+    meshSphere->draw();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+
+    // NOSE
+    // base (round part)
+    myEngine.mvMatrixStack.pushMatrix();
+    // myEngine.mvMatrixStack.addRotation(-M_PI/120, Vector3D(0.0, 0.1, 0.0));
+    myEngine.mvMatrixStack.addTranslation(Vector3D(0.0, 3.9f, 9.0f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(0.225, 0.25, 0.18));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(lightGrey, lightGrey, lightGrey);  
+    meshSphere->draw();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+    // upper part 
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(0.0, 3.9f, 9.8f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(0.18, 0.25, 0.18));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(lightGrey, lightGrey, lightGrey);  
+    meshSphere->draw();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+    // shadow
+    myEngine.mvMatrixStack.pushMatrix();
+    // myEngine.mvMatrixStack.addRotation(-M_PI/120, Vector3D(0.0, 0.1, 0.0));
+    myEngine.mvMatrixStack.addTranslation(Vector3D(0.0, 4.0f, 9.0f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(0.25, 0.25, 0.2));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(darkGrey, darkGrey, darkGrey);  
+    meshSphere->draw();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+
+    // CHEEKS
+    // left base
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(-2.0, 5.0f, 9.0f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(0.4, 0.28, 0.27));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(lightGrey,lightGrey, lightGrey);
+    meshSphere->draw();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+    // left shadow
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(-2.0, 5.3f, 8.7f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(0.4, 0.28, 0.25));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(darkGrey, darkGrey, darkGrey);
+    meshSphere->draw();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+
+    // right base
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(2.0, 5.0f, 9.0f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(0.4, 0.28, 0.27));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(lightGrey,lightGrey, lightGrey);
+    meshSphere->draw();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+    // right shadow
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(2.0, 5.3f, 8.7f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(0.4, 0.28, 0.25));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(darkGrey, darkGrey, darkGrey);
+    meshSphere->draw();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+
+}
+
+void drawBody(GLBI_Engine& myEngine)
+{
+    // blue cylinder
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(0, 15.0f, 10.0f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(1.1, 0.4, 1.2));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(0.f, 0.f, blue);
+    meshCylinder->draw();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+
+    // blue thingy that ressembles a tailpipe
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addRotation(M_PI/2, Vector3D(1.0, 0.0, 0.0));
+    myEngine.mvMatrixStack.addTranslation(Vector3D(0, 15.0f, -25.0f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(0.3, 0.2, 0.4));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(0.f, 0.f, blue);
     meshCylinder->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 }
-
-void drawStraightRails()
-{
-    drawStraightRail(POS_X_RAIL1);
-    drawStraightRail(POS_X_RAIL2);
-
-    float start = sr + rr;
-    float end = 10.0f - sr - rr;
-    float gap = (end - start) / 4.0f; // test
-    for (int i = 0; i < 5; i++) { 
-        float posY = start + i * gap;
-        drawBalast(posY);
-    }
-}
-
-void drawCurvedRail()
-{
-    // great part
-    myEngine.mvMatrixStack.pushMatrix();
-    // myEngine.mvMatrixStack.addHomothety(Vector3D(1.5f, 1.5f, 1.5f));
-    myEngine.updateMvMatrix();
-    myEngine.setFlatColor(0.6f, 0.6f, 0.6f);
-    // drawing faces of the rail 
-    greatTopFace.drawShape();
-    greatBottomFace.drawShape();
-    greatLeftFace.drawShape();
-    greatRightFace.drawShape();
-    myEngine.mvMatrixStack.popMatrix();
-
-    // small part
-    myEngine.mvMatrixStack.pushMatrix();
-    // myEngine.mvMatrixStack.addHomothety(Vector3D(1.5f, 1.5f, 1.5f));
-    myEngine.updateMvMatrix();
-    myEngine.setFlatColor(0.6f, 0.6f, 0.6f);
-    // drawing faces of the rail 
-    smallTopFace.drawShape();
-    smallBottomFace.drawShape();
-    smallLeftFace.drawShape();
-    smallRightFace.drawShape();
-    myEngine.mvMatrixStack.popMatrix();
-
-}
-
-void drawGrid()
-{
-	for (int i = 0; i < N; i++) // columns
-    {
-        for (int j = 0; j < N; j++) // ligns
-        {
-            myEngine.mvMatrixStack.pushMatrix();
-            myEngine.mvMatrixStack.addTranslation({(i - (N / 2)) * squareSize,  // for the coordinates, the interval between each top corner of a square is of squareSize 
-                                                   (j - (N / 2)) * squareSize, // same for bottom corners
-                                                   0.0f}); // grid is drawn inside plane space Oxy
-            myEngine.updateMvMatrix();
-
-            // setting different colors to distinguish squares
-            if ((i + j) % 2 == 0)
-            {
-                myEngine.setFlatColor(0.f, 0.f, 0.f); // black
-            }
-            else
-            {
-                myEngine.setFlatColor(1.f, 1.f, 1.f); // white
-            }
-
-            square.drawShape(); // draws the square 
-
-            myEngine.mvMatrixStack.popMatrix();
-            myEngine.updateMvMatrix();
-        }
-    }
-}
-
-void drawStraightTrack(int nbRails, float startX, float startY)
-{   
-    for (int i = 0; i < nbRails; i++)
-    {
-        myEngine.mvMatrixStack.pushMatrix();
-        myEngine.mvMatrixStack.addTranslation(Vector3D(startX, startY + i * squareSize, 0.0f));
-        myEngine.updateMvMatrix();
-        drawStraightRails();
-        myEngine.mvMatrixStack.popMatrix();
-        myEngine.updateMvMatrix();
-    }
-}
-
-void drawScene() {
-    glPointSize(10.0);
-    somePoints.drawSet(); // draws origin
-
-    drawGrid(); // draws grid
-
-    // draws rails
-    drawStraightTrack(5, 0.0f, 0.0f); // straight line
-    drawCurvedRail();
-}
-
-// hpp :
-#pragma once
-
-#include "glbasimac/glbi_engine.hpp"
-#include "glbasimac/glbi_set_of_points.hpp"
-#include "glbasimac/glbi_convex_2D_shape.hpp"
-#include "tools/basic_mesh.hpp"
-
-using namespace glbasimac;
-
-/* Camera parameters and functions */
-static const float Z_NEAR {0.1f};
-static const float Z_FAR {500.f};
-extern float angle_theta;      // Angle between x axis and viewpoint
-extern float angle_phy  ;      // Angle between z axis and viewpoint
-extern float dist_zoom  ;      // Distance between origin and viewpoint
-extern STP3D::IndexedMesh* meshCube;
-extern STP3D::IndexedMesh* meshCylinder;
-
-/* OpenGL Engine */
-extern GLBI_Engine myEngine;
-
-void initCurvedRails();
-
-void initStraightRails();
-
-void initSquare();
-
-void initScene();
-
-void drawStraightRail(float posX);
-
-void drawBalast(float posY);
-
-void drawStraightRails();
-
-void drawCurvedRail();
-
-void drawGrid();
-
-void drawStraightTrack(int nbRails, float startX, float startY);
-
-void drawScene();
