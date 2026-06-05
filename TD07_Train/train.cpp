@@ -3,6 +3,7 @@
 
 STP3D::IndexedMesh* meshSphere;
 STP3D::IndexedMesh* meshCylinder;
+STP3D::IndexedMesh* meshCube=nullptr;
 
 GLBI_Convex_2D_Shape eyebrow{3};
 GLBI_Convex_2D_Shape mouth{3};
@@ -19,6 +20,9 @@ void initFace()
 
     meshCylinder = STP3D::basicCylinder(30, 5, 60, 1); // height, radius, div_round, div_height
     meshCylinder->createVAO();
+
+    meshCube = STP3D::basicCube(1.0f);
+    meshCube->createVAO();
 }
 
 void initEyebrow()
@@ -293,6 +297,8 @@ void drawFace(GLBI_Engine& myEngine)
 
 void drawBody(GLBI_Engine& myEngine)
 {
+    if (!meshCube) { std::cerr << "meshCube is null!\n"; return; }
+    // ...
     // blue cylinder
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(0, 15.0f, 10.0f));
@@ -311,6 +317,17 @@ void drawBody(GLBI_Engine& myEngine)
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.f, 0.f, blue);
     meshCylinder->draw();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+
+    // rest of the body
+    // blue box
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(0, 30.0f, 8.0f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(15.0, 20.0, 10.0));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(0.f, 0.f, blue);
+    meshCube->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 }
