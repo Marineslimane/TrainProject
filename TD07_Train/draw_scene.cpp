@@ -98,7 +98,7 @@ void drawScene()
     rails.drawStraightTrack(myEngine, 5, 0.0f, 0.0f, squareSize); // straight line
     rails.drawPositionnedCurvedRails(myEngine, 0.5, 0.125, squareSize, -M_PI/2);
     // draws train
-    drawKenny(0.0f, 0.0f, 0.0f);
+    drawKenny(10.0f, 0.0f, 0.0f);
     drawFace(myEngine);
     drawEyebrow(myEngine);
     drawMouth(myEngine);

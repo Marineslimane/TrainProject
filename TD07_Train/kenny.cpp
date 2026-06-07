@@ -48,6 +48,7 @@ void drawKenny(float posX, float posY, float posZ)
 {
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(posX, posY, posZ));
+    myEngine.mvMatrixStack.addHomothety(0.5f);
     myEngine.updateMvMatrix();
 
     //pieds
