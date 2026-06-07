@@ -9,4 +9,14 @@ using namespace glbasimac;
 
 void initFace();
 
+void initMouth();
+
+void initEyebrow();
+
+void drawMouth(GLBI_Engine& myEngine);
+
+void drawEyebrow(GLBI_Engine& myEngine);
+
+void drawBody(GLBI_Engine& myEngine);
+
 void drawFace(GLBI_Engine& myEngine);

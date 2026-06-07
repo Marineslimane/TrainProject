@@ -50,6 +50,11 @@ void initScene()
     initTrainStation();
     //kenny
     initKenny();
+    initFace();
+    initEyebrow();
+    initMouth();
+    // train station
+    initTrainStation();
 }
 
 void drawGrid()
@@ -94,4 +99,10 @@ void drawScene()
     rails.drawPositionnedCurvedRails(myEngine, 0.5, 0.125, squareSize, -M_PI/2);
     // draws train
     drawKenny(0.0f, 0.0f, 0.0f);
+    drawFace(myEngine);
+    drawEyebrow(myEngine);
+    drawMouth(myEngine);
+    drawBody(myEngine);
+    // trainstation
+    drawTrainStation(myEngine, 60.0, 10.0);
 }
