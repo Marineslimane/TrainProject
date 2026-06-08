@@ -45,9 +45,7 @@ void initScene()
     rails.initStraightRails();
     rails.initCurvedRails();
     // train
-    initFace();
-    initEyebrow();
-    initMouth();
+    initTrain();
     // train station
     initTrainStation();
 }
@@ -93,10 +91,7 @@ void drawScene()
     rails.drawStraightTrack(myEngine, 5, 0.0f, 0.0f, squareSize); // straight line
     rails.drawPositionnedCurvedRails(myEngine, 0.5, 0.125, squareSize, -M_PI/2);
     // draws train
-    drawFace(myEngine);
-    drawEyebrow(myEngine);
-    drawMouth(myEngine);
-    drawBody(myEngine);
+    drawTrain(myEngine);
     // trainstation
     drawTrainStation(myEngine, 60.0, 10.0);
 }

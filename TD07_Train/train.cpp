@@ -4,6 +4,7 @@
 STP3D::IndexedMesh* meshSphere;
 STP3D::IndexedMesh* meshCylinder;
 STP3D::IndexedMesh* meshCube=nullptr;
+STP3D::StandardMesh* meshRect = nullptr;
 
 GLBI_Convex_2D_Shape eyebrow{3};
 GLBI_Convex_2D_Shape mouth{3};
@@ -49,6 +50,20 @@ void initMouth()
     mouth.changeNature(GL_TRIANGLE_STRIP);
 }
 
+void initWheel()
+{
+    meshRect = STP3D::basicRect(5.8f, 5.0); // x, z
+    meshRect->createVAO();
+}
+
+void initTrain()
+{
+    initFace();
+    initEyebrow();
+    initMouth();
+    initWheel();
+}
+
 void drawMouth(GLBI_Engine& myEngine)
 {
     myEngine.mvMatrixStack.pushMatrix();
@@ -85,7 +100,7 @@ void drawEyebrow(GLBI_Engine& myEngine)
     eyebrow.drawShape();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
-    // right A MODIFIER
+    // right
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(2.25f, 4.5f, 13.25f));
     myEngine.mvMatrixStack.addHomothety(Vector3D(1.0, 1.0, 0.75));
@@ -99,16 +114,6 @@ void drawEyebrow(GLBI_Engine& myEngine)
 
 void drawFace(GLBI_Engine& myEngine)
 {
-    // // base cylinder of face (for neck and overall shape)
-    // myEngine.mvMatrixStack.pushMatrix();
-    // myEngine.mvMatrixStack.addTranslation(Vector3D(0, 5.0f, 10.0f));
-    // myEngine.mvMatrixStack.addHomothety(Vector3D(1.0, 0.5, 1.0));
-    // myEngine.updateMvMatrix();
-    // myEngine.setFlatColor(0.5, 0.5, 0.5);
-    // meshCylinder->draw();
-    // myEngine.mvMatrixStack.popMatrix();
-    // myEngine.updateMvMatrix();
-
     // base sphere of face (for round appearance of face, especially on the side)
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(0, 7.0f, 10.0f));
@@ -295,14 +300,34 @@ void drawFace(GLBI_Engine& myEngine)
 
 }
 
+void drawWheel(GLBI_Engine& myEngine, float posX, float posY)
+{
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addRotation(M_PI/2, Vector3D(0.0, 0.0, 1.0));
+    myEngine.mvMatrixStack.addTranslation(Vector3D(posX, posY, 4.0f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(0.8, 0.08, 0.8));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(0.f, 0.f, blue);
+    meshCylinder->draw();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+}
+
+void drawWheels(GLBI_Engine& myEngine, float posX, float posY)
+{
+    for (int i {0} ; i < 3 ; i++)
+    {
+        drawWheel(myEngine, posX + i*10.0, posY); // left side wheel
+        drawWheel(myEngine, posX + i*10.0, -posY-2.5); // right side wheel
+    }
+}
+
 void drawBody(GLBI_Engine& myEngine)
 {
-    if (!meshCube) { std::cerr << "meshCube is null!\n"; return; }
-    // ...
     // blue cylinder
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(0, 15.0f, 10.0f));
-    myEngine.mvMatrixStack.addHomothety(Vector3D(1.1, 0.4, 1.2));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(1.1, 0.8, 1.2));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.f, 0.f, blue);
     meshCylinder->draw();
@@ -330,4 +355,24 @@ void drawBody(GLBI_Engine& myEngine)
     meshCube->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
+
+}
+
+void drawUpperBody(GLBI_Engine& myEngine) // draws everything but the face
+{
+    drawFace(myEngine);
+    drawEyebrow(myEngine);
+    drawMouth(myEngine);
+    drawBody(myEngine);
+}
+
+void drawTrain(GLBI_Engine& myEngine)
+{
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(0.0, 0.0, 5.0)); // moving it upwards
+    myEngine.updateMvMatrix();
+    drawUpperBody(myEngine); // everything but wheels
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+    drawWheels(myEngine, 17.0, 7.0);
 }

@@ -13,6 +13,10 @@ void initMouth();
 
 void initEyebrow();
 
+void initWheel();
+
+void initTrain();
+
 void drawMouth(GLBI_Engine& myEngine);
 
 void drawEyebrow(GLBI_Engine& myEngine);
@@ -20,3 +24,7 @@ void drawEyebrow(GLBI_Engine& myEngine);
 void drawBody(GLBI_Engine& myEngine);
 
 void drawFace(GLBI_Engine& myEngine);
+
+void drawUpperBody(GLBI_Engine& myEngine);
+
+void drawTrain(GLBI_Engine& myEngine);
