@@ -4,7 +4,7 @@
 STP3D::IndexedMesh* meshSphere;
 STP3D::IndexedMesh* meshCylinder;
 STP3D::IndexedMesh* meshCube=nullptr;
-STP3D::StandardMesh* meshRect = nullptr;
+STP3D::StandardMesh* meshRect2 = nullptr;
 
 GLBI_Convex_2D_Shape eyebrow{3};
 GLBI_Convex_2D_Shape mouth{3};
@@ -52,8 +52,8 @@ void initMouth()
 
 void initWheel()
 {
-    meshRect = STP3D::basicRect(5.8f, 5.0); // x, z
-    meshRect->createVAO();
+    meshRect2 = STP3D::basicRect(5.8f, 5.0); // x, z
+    meshRect2 ->createVAO();
 }
 
 void initTrain()
@@ -319,6 +319,37 @@ void drawWheels(GLBI_Engine& myEngine, float posX, float posY)
     {
         drawWheel(myEngine, posX + i*10.0, posY); // left side wheel
         drawWheel(myEngine, posX + i*10.0, -posY-2.5); // right side wheel
+
+        // inside of wheels 
+        // left side wheel
+        for (int j {0}; j < 8; j++)
+        {
+            myEngine.mvMatrixStack.pushMatrix();
+            myEngine.mvMatrixStack.addTranslation(Vector3D(posX, posY, 4.0f));       // centre exact de la roue
+            myEngine.mvMatrixStack.addRotation((2*M_PI/8)*j, Vector3D(0.0, 1.0, 0.0)); // cercle complet autour de Y
+            myEngine.mvMatrixStack.addTranslation(Vector3D(0.0f, 0.0f, 2.5f));         // décalage radial (ajuste selon rayon roue)
+            myEngine.mvMatrixStack.addHomothety(Vector3D(0.05f, 0.8f, 0.15f));
+            myEngine.updateMvMatrix();
+            myEngine.setFlatColor(0.9f, 0.9f, 0.9f);
+            meshCube->draw();
+            myEngine.mvMatrixStack.popMatrix();
+            myEngine.updateMvMatrix();
+        }
+
+        // right side wheel
+        for (int j {0}; j < 8; j++)
+        {
+            myEngine.mvMatrixStack.pushMatrix();
+            myEngine.mvMatrixStack.addTranslation(Vector3D(posX, -posY - 2.5f, 4.0f));
+            myEngine.mvMatrixStack.addRotation((2*M_PI/8)*j, Vector3D(0.0, 1.0, 0.0));
+            myEngine.mvMatrixStack.addTranslation(Vector3D(0.0f, 0.0f, 2.5f));
+            myEngine.mvMatrixStack.addHomothety(Vector3D(0.05f, 0.8f, 0.15f));
+            myEngine.updateMvMatrix();
+            myEngine.setFlatColor(0.9f, 0.9f, 0.9f);
+            meshCube->draw();
+            myEngine.mvMatrixStack.popMatrix();
+            myEngine.updateMvMatrix();
+        }
     }
 }
 
