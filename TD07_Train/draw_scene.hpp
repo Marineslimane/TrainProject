@@ -4,7 +4,7 @@
 #include "glbasimac/glbi_set_of_points.hpp"
 #include "glbasimac/glbi_convex_2D_shape.hpp"
 #include "tools/basic_mesh.hpp"
-
+#include "glbasimac/glbi_texture.hpp"
 using namespace glbasimac;
 
 /* Camera parameters and functions */
@@ -18,7 +18,7 @@ extern STP3D::IndexedMesh* meshCylinder;
 
 /* OpenGL Engine */
 extern GLBI_Engine myEngine;
-
+extern STP3D::StandardMesh* groundMesh;
 // init functions
 void initSquare();
 

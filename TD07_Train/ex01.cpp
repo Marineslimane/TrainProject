@@ -5,7 +5,6 @@
 #include "tools/shaders.hpp"
 #include "json.hpp" // to read json file
 #include <iostream>
-
 using namespace glbasimac;
 using namespace STP3D;
 
