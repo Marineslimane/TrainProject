@@ -57,7 +57,7 @@ void drawTrainStation(GLBI_Engine& myEngine, float posX, float posY)
 {
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(posX, posY, 0.0f));
-    myEngine.mvMatrixStack.addRotation(M_PI / 2.0f, Vector3D(0.0f, 0.0f, 1.0f));
+    myEngine.mvMatrixStack.addRotation(M_PI/6 , Vector3D(0.0f, 0.0f, 1.0f));
     myEngine.mvMatrixStack.addHomothety(10.0f / W); 
     myEngine.updateMvMatrix();
 

@@ -18,7 +18,7 @@ Rail rails; // struct Rail for rails objects
 
 // Grid parameters
 const float squareSize {10}; // size of each square of the grid
-const int N {10}; // size of grid (grid itself is a square)
+const int N {40}; // size of grid (grid itself is a square)
 
 STP3D::StandardMesh* groundMesh = nullptr; 
 STP3D::IndexedMesh* meshCube = nullptr;
@@ -73,10 +73,18 @@ void initScene()
         stbi_image_free(grassPixels);
         std::cerr << "Texture herbe OK" << std::endl;
     }
+    
+    //light
+    myEngine.switchToPhongShading();
+    myEngine.setLightPosition({1.0f, -1.0f, 10.0f, 0.0f}, 0);
+    myEngine.setLightIntensity({1.5f, 1.5f, 1.2f}, 0);
+    myEngine.setShininess(70.0f);
+    myEngine.setSpecularColor({1.0f, 1.0f, 0.8f});
+    myEngine.switchToFlatShading();
 }
-
 void drawGrid()
 {
+    myEngine.switchToPhongShading();
     myEngine.activateTexturing(true);
     grassTexture.attachTexture();
 
@@ -100,7 +108,6 @@ void drawGrid()
     grassTexture.detachTexture();
     myEngine.activateTexturing(false);
 }
-
 void drawScene() 
 {
     glPointSize(10.0);
@@ -111,14 +118,12 @@ void drawScene()
     // draws rails
     rails.drawStraightTrack(myEngine, 5, 0.0f, 0.0f, squareSize); // straight line
     rails.drawPositionnedCurvedRails(myEngine, 0.5, 0.125, squareSize, -M_PI/2);
-
     // draws train
     drawKenny(10.0f, 0.0f, 0.0f);
     drawFace(myEngine);
     drawEyebrow(myEngine);
     drawMouth(myEngine);
     drawBody(myEngine);
-
     // trainstation
-    drawTrainStation(myEngine, 60.0, 10.0);
+    drawTrainStation(myEngine, -20.0, 10.0);
 }
