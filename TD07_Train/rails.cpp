@@ -182,17 +182,24 @@ void Rail::drawStraightRails(GLBI_Engine& myEngine)
 
 void Rail::drawCurvedRails(GLBI_Engine& myEngine)
 {
+    myEngine.switchToPhongShading();
     // great part
     myEngine.mvMatrixStack.pushMatrix();
     // myEngine.mvMatrixStack.addHomothety(Vector3D(1.5f, 1.5f, 1.5f));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(RAIL_R, RAIL_G, RAIL_B);
     // drawing faces of the rail 
+
+    myEngine.setNormalForConvex2DShape(Vector3D(0.0f, 0.0f, 1.0f));
     greatTopFace.drawShape();
+    myEngine.setNormalForConvex2DShape(Vector3D(0.0f, 0.0f, -1.0f));
     greatBottomFace.drawShape();
+    myEngine.setNormalForConvex2DShape(Vector3D(-1.0f, 0.0f, 0.0f));
     greatLeftFace.drawShape();
+    myEngine.setNormalForConvex2DShape(Vector3D(1.0f, 0.0f, 0.0f));
     greatRightFace.drawShape();
     myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
 
     // small part
     myEngine.mvMatrixStack.pushMatrix();
@@ -200,11 +207,16 @@ void Rail::drawCurvedRails(GLBI_Engine& myEngine)
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(RAIL_R, RAIL_G, RAIL_B);
     // drawing faces of the rail 
+    myEngine.setNormalForConvex2DShape(Vector3D(0.0f, 0.0f, 1.0f));
     smallTopFace.drawShape();
+    myEngine.setNormalForConvex2DShape(Vector3D(0.0f, 0.0f, -1.0f));
     smallBottomFace.drawShape();
+    myEngine.setNormalForConvex2DShape(Vector3D(-1.0f, 0.0f, 0.0f));
     smallLeftFace.drawShape();
+    myEngine.setNormalForConvex2DShape(Vector3D(1.0f, 0.0f, 0.0f));
     smallRightFace.drawShape();
     myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
 
     // ballasts
     myEngine.mvMatrixStack.pushMatrix();

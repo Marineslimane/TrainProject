@@ -71,6 +71,7 @@ void drawMouth(GLBI_Engine& myEngine)
 
 void drawEyebrow(GLBI_Engine& myEngine)
 {
+    myEngine.switchToPhongShading();
     // left
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(-2.25f, 4.5f, 13.25f));
@@ -78,6 +79,7 @@ void drawEyebrow(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addRotation(-M_PI/12, Vector3D(0.0, 1.0, 0.0));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.0, 0.0, 0.0);
+    myEngine.setNormalForConvex2DShape(Vector3D(0.0f, -1.0f, 0.0f));
     eyebrow.drawShape();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
@@ -88,9 +90,11 @@ void drawEyebrow(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addRotation(M_PI/12, Vector3D(0.0, 1.0, 0.0));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.0, 0.0, 0.0);
+    myEngine.setNormalForConvex2DShape(Vector3D(0.0f, -1.0f, 0.0f));
     eyebrow.drawShape();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
+
 }
 
 void drawFace(GLBI_Engine& myEngine)
