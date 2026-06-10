@@ -24,10 +24,16 @@ extern float cam_pitch;
 /* OpenGL Engine */
 extern GLBI_Engine myEngine;
 extern STP3D::StandardMesh* groundMesh;
+
+// light
+void enableLighting();
+
+void disableLighting();
+
 // init functions
 void initSquare();
 
-void initScene();
+void initScene(const std::string& jsonPath);
 
 // draw functions
 void drawGrid();

@@ -6,6 +6,7 @@
 #include "json.hpp" // to read json file
 #include <iostream>
 #include <fstream>
+#include <filesystem>
 using namespace glbasimac;
 using namespace STP3D;
 
@@ -21,6 +22,7 @@ static const double FRAMERATE_IN_SECONDS = 1. / 30.;
 const float CAM_SPEED {2.0f};
 const float CAM_ROT_SPEED {5.0f};
 
+#include <filesystem>
 /* Error handling function */
 void onError(int error, const char* description) {
 	std::cout << "GLFW Error ("<<error<<") : " << description << std::endl;
@@ -38,9 +40,8 @@ void onWindowResized(GLFWwindow* /*window*/, int width, int height)
 void onKey(GLFWwindow* window, int key, int /*scancode*/, int action, int /*mods*/)
 {
 	int is_pressed {action == GLFW_PRESS};
-	int is_repeated {action == GLFW_REPEAT};
 
-	//fps
+	// fps
     if (action == GLFW_PRESS || action == GLFW_REPEAT)
     {
         float rad = deg2rad(cam_angle);
@@ -113,22 +114,17 @@ void onMouseButton(GLFWwindow* window, int button, int action, int /*mods*/)
 	}
 }
 
-int main(int argc, char** argv)
+int main(int argc, char** argv) // argc : nb of arguments, argv : arguments
 {
-	//JSON
-    if (argc < 2) {
+	std::cerr << "Working directory: " << std::filesystem::current_path() << std::endl;
+	// JSON
+    if (argc < 2) // if less than 2 parameters entered
+	{
         std::cerr << "Usage: " << argv[0] << " <circuit.json>" << std::endl;
-    return -1;
+    	return -1;
     }
 
-    std::string jsonFile = argv[1];
-    std::ifstream f(jsonFile);
-    if (!f.is_open()) {
-        std::cerr << "Erreur : impossible d'ouvrir " << jsonFile << std::endl;
-        return -1;
-    }
-    nlohmann::json circuit = nlohmann::json::parse(f);
-    std::cerr << "JSON chargé : " << jsonFile << std::endl;
+    std::string jsonFile {argv[1]};
 
 	/* Callback to a function if an error is rised by GLFW */
     GLFWwindow* window;
@@ -168,7 +164,7 @@ int main(int argc, char** argv)
 	onWindowResized(window,WINDOW_WIDTH,WINDOW_HEIGHT);
 	CHECK_GL;
 
-	initScene();
+	initScene(jsonFile);
 	double elapsedTime{0.0};
 
 	/* Loop until the user closes the window */

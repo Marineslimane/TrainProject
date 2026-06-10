@@ -19,6 +19,6 @@ struct CircuitData
 
 CircuitData loadCircuit(const std::string& path);
 
-void initCircuit();
+void initCircuit(const std::string& path);
 
 void drawCircuit(GLBI_Engine& myEngine, Rail& rails);

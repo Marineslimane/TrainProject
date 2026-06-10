@@ -3,7 +3,7 @@
 #include "draw_scene.hpp"   // ← ajouter
 STP3D::IndexedMesh* meshSphere;
 STP3D::IndexedMesh* meshCylinder;
-STP3D::IndexedMesh* meshCube=nullptr;
+STP3D::IndexedMesh* meshCube3=nullptr;
 STP3D::StandardMesh* meshRect2 = nullptr;
 
 GLBI_Convex_2D_Shape eyebrow{3};
@@ -23,8 +23,8 @@ void initFace()
     meshCylinder = STP3D::basicCylinder(30, 5, 60, 1); // height, radius, div_round, div_height
     meshCylinder->createVAO();
 
-    meshCube = STP3D::basicCube(1.0f);
-    meshCube->createVAO();
+    meshCube3 = STP3D::basicCube(1.0f);
+    meshCube3->createVAO();
 }
 
 void initEyebrow()
@@ -377,7 +377,7 @@ void drawWheels(GLBI_Engine& myEngine, float posX, float posY)
             myEngine.mvMatrixStack.addHomothety(Vector3D(0.08f, 3.0f, 0.25f));
             myEngine.updateMvMatrix();
             myEngine.setFlatColor(0.0, 0.0, blue);
-            meshCube->draw();
+            meshCube3->draw();
             myEngine.mvMatrixStack.popMatrix();
             myEngine.updateMvMatrix();
         }
@@ -413,7 +413,7 @@ void drawWheels(GLBI_Engine& myEngine, float posX, float posY)
             myEngine.mvMatrixStack.addHomothety(Vector3D(0.08f, 3.0f, 0.25f));
             myEngine.updateMvMatrix();
             myEngine.setFlatColor(0.0, 0.0, blue);
-            meshCube->draw();
+            meshCube3->draw();
             myEngine.mvMatrixStack.popMatrix();
             myEngine.updateMvMatrix();
         }
@@ -475,7 +475,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(15.0, 18.0, 10.0));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.f, 0.f, blue);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
     // red line inside
@@ -484,7 +484,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(15.1, 17.0, 8.0));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(red, 0.f, 0.f);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
@@ -493,7 +493,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(15.2, 16.2, 7.2));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.f, 0.f, blue);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
     // small blue box
@@ -502,7 +502,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(15.0, 8.0, 5.0));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.f, 0.f, blue);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
     // red line inside 
@@ -511,7 +511,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(15.1, 7.0, 4.0));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(red, 0.f, 0.f);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
     
@@ -520,7 +520,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(15.2, 6.2, 3.2));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.f, 0.f, blue);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
@@ -529,7 +529,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(15.2, 6.2, 3.2));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.f, 0.f, blue);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
     // blue box middle part
@@ -538,7 +538,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(12.0, 3.0, 7.0));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.f, 0.f, blue+1);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
     // cabin
@@ -548,7 +548,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(1.5, 0.8, 7.0));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.f, 0.f, blue+1);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
@@ -557,7 +557,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(1.5, 0.8, 7.0));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.f, 0.f, blue+1);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
@@ -566,7 +566,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(1.5, 0.8, 7.0));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.f, 0.f, blue+1);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
@@ -576,7 +576,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(1.5, 0.8, 7.0));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.f, 0.f, blue+1);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
@@ -585,7 +585,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(1.5, 0.8, 7.0));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.f, 0.f, blue+1);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
@@ -594,7 +594,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(1.5, 0.8, 7.0));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.f, 0.f, blue+1);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
     // roof
@@ -605,7 +605,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(10.0, 10.0, 0.5));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.f, 0.f, 0.f);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
     // right part
@@ -615,7 +615,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(10.0, 10.0, 0.5));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.f, 0.f, 0.f);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
     // middle part
@@ -624,7 +624,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(4.0, 10.0, 0.5));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.f, 0.f, 0.f);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
     // blue box 3
@@ -633,7 +633,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(15.0, 8.0, 10.0));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.f, 0.f, blue);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
     // red line blue box 3
@@ -642,7 +642,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(15.1, 7.0, 8.0));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(red, 0.f, 0.f);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
@@ -651,7 +651,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(15.2, 6.2, 7.2));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.f, 0.f, blue);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
     // black box
@@ -660,7 +660,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(12.0, 25.0, 8.0));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.f, 0.f, 0.f);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
     // black box 2
@@ -669,7 +669,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(12.0, 44.0, 3.0));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.f, 0.f, 0.f);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
     // black box 3
@@ -678,7 +678,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(12.0, 40.0, 3.5));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(0.f, 0.f, 0.f);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
     // red box
@@ -687,7 +687,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(20, 40.0, 1.25));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(red, 0.f, 0.f);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
     // inclined red part
@@ -697,7 +697,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(20, 5, 1.25));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(red, 0.f, 0.f);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
     // rest of red part
@@ -706,7 +706,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(20, 4.5, 1.25));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(red, 0.f, 0.f);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
     // behind red part
@@ -715,7 +715,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(20, 1.25, 3.75));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(red, 0.f, 0.f);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
     // front red cylinders
@@ -763,7 +763,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(0.5, 27.0, 0.7));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(darkGrey, darkGrey, darkGrey);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
     // inside part left
@@ -772,7 +772,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(0.51, 26.6, 0.64));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(darkGrey-0.1, darkGrey-0.1, darkGrey-0.1);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
     // right
@@ -781,7 +781,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(0.5, 27.0, 0.7));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(darkGrey, darkGrey, darkGrey);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
     // inside part right
@@ -790,7 +790,7 @@ void drawBodyBox(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addHomothety(Vector3D(0.51, 26.6, 0.64));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(darkGrey-0.1, darkGrey-0.1, darkGrey-0.1);
-    meshCube->draw();
+    meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 

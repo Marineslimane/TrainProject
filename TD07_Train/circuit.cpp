@@ -1,7 +1,6 @@
 #include "json.hpp"
 #include "circuit.hpp"
 
-const std::string circuitPath {CIRCUIT_JSON_PATH}; // path of the json file containing circuit
 CircuitData circuit;
 
 CircuitData loadCircuit(const std::string& path) // stores data from json file in struct CircuitData
@@ -21,10 +20,10 @@ CircuitData loadCircuit(const std::string& path) // stores data from json file i
     
     try
     {
-        nlohmann::json data {nlohmann::json::parse(content)};
+        nlohmann::json data = nlohmann::json::parse(content);
         CircuitData result;
-
         result.squareSize = data["size_grid"];
+
         for (auto& pos : data["path"]) // all positions where rails should be put 
         {
             result.cells.push_back({pos[0], pos[1]});
@@ -39,9 +38,9 @@ CircuitData loadCircuit(const std::string& path) // stores data from json file i
     }
 }
 
-void initCircuit()
+void initCircuit(const std::string& path)
 {
-    circuit = loadCircuit(circuitPath);
+    circuit = loadCircuit(path);
 }
 
 void drawCircuit(GLBI_Engine& myEngine, Rail& rails)
