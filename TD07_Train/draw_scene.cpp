@@ -126,29 +126,17 @@ void drawScene()
     somePoints.drawSet();
     enableLighting();
     drawGrid();
-    disableLighting();
+    
     // draws rails
     rails.drawStraightTrack(myEngine, 5, 0.0f, 0.0f, squareSize); // straight line
     rails.drawPositionnedCurvedRails(myEngine, 0.5, 0.125, squareSize, -M_PI/2);
-    // draws train
 
-    enableLighting();
+    // draws objects
+
     drawKenny(10.0f, 0.0f, 0.0f);
-    disableLighting();
-
-    enableLighting();
     drawFace(myEngine);
-
-    enableLighting();
     drawEyebrow(myEngine);
-
-    enableLighting();
     drawMouth(myEngine);
-
-    enableLighting();
     drawBody(myEngine);
-
-    // trainstation
-    enableLighting();
     drawTrainStation(myEngine, -20.0, 10.0);
 }
