@@ -1,6 +1,6 @@
 #include "tools/basic_mesh.hpp"
 #include "train.hpp"
-
+#include "draw_scene.hpp"   // ← ajouter
 STP3D::IndexedMesh* meshSphere;
 STP3D::IndexedMesh* meshCylinder;
 
@@ -71,7 +71,7 @@ void drawMouth(GLBI_Engine& myEngine)
 
 void drawEyebrow(GLBI_Engine& myEngine)
 {
-    myEngine.switchToPhongShading();
+     if (lightingEnabled) myEngine.switchToPhongShading();
     // left
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(-2.25f, 4.5f, 13.25f));

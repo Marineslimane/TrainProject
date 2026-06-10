@@ -32,6 +32,13 @@ GLBI_Texture grassTexture;
 // Rail parameters
 const float posY {5.0};
 
+void enableLighting() {
+    if (lightingEnabled) myEngine.switchToPhongShading();
+}
+
+void disableLighting() {
+    if (lightingEnabled) myEngine.switchToFlatShading();
+}
 void initScene()
 {
     std::vector<float> points {0.0, 0.0, 0.0};
@@ -88,7 +95,8 @@ void initScene()
 }
 void drawGrid()
 {
-    myEngine.switchToPhongShading();
+
+    if (lightingEnabled) myEngine.switchToPhongShading();
     myEngine.activateTexturing(true);
     grassTexture.attachTexture();
 
@@ -116,18 +124,31 @@ void drawScene()
 {
     glPointSize(10.0);
     somePoints.drawSet();
-
+    enableLighting();
     drawGrid();
-
+    disableLighting();
     // draws rails
     rails.drawStraightTrack(myEngine, 5, 0.0f, 0.0f, squareSize); // straight line
     rails.drawPositionnedCurvedRails(myEngine, 0.5, 0.125, squareSize, -M_PI/2);
     // draws train
+
+    enableLighting();
     drawKenny(10.0f, 0.0f, 0.0f);
+    disableLighting();
+
+    enableLighting();
     drawFace(myEngine);
+
+    enableLighting();
     drawEyebrow(myEngine);
+
+    enableLighting();
     drawMouth(myEngine);
+
+    enableLighting();
     drawBody(myEngine);
+
     // trainstation
+    enableLighting();
     drawTrainStation(myEngine, -20.0, 10.0);
 }
