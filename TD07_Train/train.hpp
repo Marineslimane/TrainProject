@@ -27,4 +27,6 @@ void drawFace(GLBI_Engine& myEngine);
 
 void drawUpperBody(GLBI_Engine& myEngine);
 
+void drawTire(GLBI_Engine& myEngine, float posX, float posY);
+
 void drawTrain(GLBI_Engine& myEngine);
