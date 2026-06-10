@@ -18,8 +18,8 @@ static float aspectRatio = 1.0f;
 /* Minimal time wanted between two images */
 static const double FRAMERATE_IN_SECONDS = 1. / 30.;
 
-const float CAM_SPEED {2.0f};
-const float CAM_ROT_SPEED {5.0f};
+const float CAM_SPEED {12.0f};
+const float CAM_ROT_SPEED {15.0f};
 
 /* Error handling function */
 void onError(int error, const char* description) {
