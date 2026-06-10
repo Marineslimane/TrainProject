@@ -6,6 +6,7 @@
 #include "kenny.hpp"
 #define STB_IMAGE_IMPLEMENTATION
 #include "tools/stb_image.h"
+#include "circuit.hpp"
 
 /// Camera parameters
 float cam_x {0.0f};
@@ -92,6 +93,12 @@ void initScene()
     myEngine.setSpecularColor({0.3f, 0.3f, 0.3f}); 
     myEngine.setAttenuationFactor({1.0f, 0.01f, 0.001f});
     if (lightingEnabled) myEngine.switchToFlatShading();
+    // train
+    initTrain();
+    // train station
+    initTrainStation();
+    // json
+    initCircuit();
 }
 void drawGrid()
 {
@@ -127,16 +134,14 @@ void drawScene()
     enableLighting();
     drawGrid();
     
-    // draws rails
-    rails.drawStraightTrack(myEngine, 5, 0.0f, 0.0f, squareSize); // straight line
-    rails.drawPositionnedCurvedRails(myEngine, 0.5, 0.125, squareSize, -M_PI/2);
-
     // draws objects
-
     drawKenny(10.0f, 0.0f, 0.0f);
-    drawFace(myEngine);
-    drawEyebrow(myEngine);
-    drawMouth(myEngine);
-    drawBody(myEngine);
     drawTrainStation(myEngine, -20.0, 10.0);
+    // rails.drawStraightTrack(myEngine, 5, 0.0f, 0.0f, squareSize); // straight line
+    // rails.drawPositionnedCurvedRails(myEngine, 0.5, 0.125, squareSize, -M_PI/2);
+    drawCircuit(myEngine, rails);
+    // draws train
+    drawPositionnedTrain(myEngine, 25.0, 20.0);
+    // trainstation
+    drawTrainStation(myEngine, 60.0, 10.0);
 }
