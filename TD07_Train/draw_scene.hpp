@@ -16,6 +16,10 @@ extern float dist_zoom  ;      // Distance between origin and viewpoint
 extern STP3D::IndexedMesh* meshCube;
 extern STP3D::IndexedMesh* meshCylinder;
 
+extern float cam_x, cam_y, cam_z;
+extern float cam_angle;
+extern bool lightingEnabled;
+
 /* OpenGL Engine */
 extern GLBI_Engine myEngine;
 extern STP3D::StandardMesh* groundMesh;

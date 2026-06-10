@@ -8,10 +8,11 @@
 #include "tools/stb_image.h"
 
 /// Camera parameters
-float angle_theta {90.0};      // Angle between x axis and viewpoint
-float angle_phy {80.0};      // Angle between z axis and viewpoint
-float dist_zoom {40.0};      // Distance between origin and viewpoint
-
+float cam_x {0.0f};
+float cam_y {-20.0f};
+float cam_z {5.0f};
+float cam_angle {90.0f};
+bool lightingEnabled {true};
 GLBI_Engine myEngine;
 GLBI_Set_Of_Points somePoints(3);
 Rail rails; // struct Rail for rails objects
@@ -76,10 +77,12 @@ void initScene()
     
     //light
     myEngine.switchToPhongShading();
-    myEngine.setLightPosition({1.0f, -1.0f, 10.0f, 0.0f}, 0);
-    myEngine.setLightIntensity({1.5f, 1.5f, 1.2f}, 0);
-    myEngine.setShininess(70.0f);
-    myEngine.setSpecularColor({1.0f, 1.0f, 0.8f});
+    myEngine.setLightPosition({2.0f, -3.0f, 5.0f, 0.0f}, 0);
+    myEngine.setLightIntensity({1.2f, 1.1f, 0.9f}, 0);
+    myEngine.addALight({-1.0f, 1.0f, 3.0f, 0.0f}, {0.3f, 0.4f, 0.5f});
+    myEngine.setShininess(5.0f);
+    myEngine.setSpecularColor({0.3f, 0.3f, 0.3f}); 
+    myEngine.setAttenuationFactor({1.0f, 0.01f, 0.001f});
     myEngine.switchToFlatShading();
 }
 void drawGrid()
