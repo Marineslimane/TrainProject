@@ -37,14 +37,9 @@ void onWindowResized(GLFWwindow* /*window*/, int width, int height)
 
 void onKey(GLFWwindow* window, int key, int /*scancode*/, int action, int /*mods*/)
 {
-    //Quitter
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
+	int is_pressed {action == GLFW_PRESS};
+	int is_repeated {action == GLFW_REPEAT};
 
-    //Toggle éclairage
-    if (key == GLFW_KEY_L && action == GLFW_PRESS)
-        lightingEnabled = !lightingEnabled;
-	
 	//fps
     if (action == GLFW_PRESS || action == GLFW_REPEAT)
     {
@@ -52,45 +47,59 @@ void onKey(GLFWwindow* window, int key, int /*scancode*/, int action, int /*mods
         float fx = cos(rad);
         float fy = sin(rad);
 
-	switch(key) 
-	{
- 		case GLFW_KEY_W :
-            cam_x += fx * CAM_SPEED;
-            cam_y += fy * CAM_SPEED;
-            break;
-        case GLFW_KEY_S:
-            cam_x -= fx * CAM_SPEED;
-            cam_y -= fy * CAM_SPEED;
-        	break;
-        case GLFW_KEY_A:
-            cam_angle += CAM_ROT_SPEED;
-            break;
-        case GLFW_KEY_D:
-            cam_angle -= CAM_ROT_SPEED;
-            break;
-        case GLFW_KEY_SPACE:
-            cam_z += CAM_SPEED;
-            break;
-        case GLFW_KEY_Z:
-            cam_z -= CAM_SPEED;
-            break;
-        default:
-            break;
-		case GLFW_KEY_UP:
-			cam_pitch += CAM_ROT_SPEED;
-			if (cam_pitch > 89.0f) cam_pitch = 89.0f;
-			break;
-		case GLFW_KEY_DOWN:
-			cam_pitch -= CAM_ROT_SPEED;
-			if (cam_pitch < -89.0f) cam_pitch = -89.0f;
-			break;
-		case GLFW_KEY_LEFT:
-			cam_angle += CAM_ROT_SPEED;
-			break;
-		case GLFW_KEY_RIGHT:
-			cam_angle -= CAM_ROT_SPEED;
-			break;
-	}
+		switch(key) 
+		{
+			case GLFW_KEY_ESCAPE:
+				if (is_pressed) glfwSetWindowShouldClose(window, GLFW_TRUE);
+				break;
+			// light
+			case GLFW_KEY_L:
+				if (is_pressed) lightingEnabled = !lightingEnabled;
+				break;
+			// camera 
+			case GLFW_KEY_W :
+				cam_x += fx * CAM_SPEED;
+				cam_y += fy * CAM_SPEED;
+				break;
+			case GLFW_KEY_S:
+				cam_x -= fx * CAM_SPEED;
+				cam_y -= fy * CAM_SPEED;
+				break;
+			case GLFW_KEY_A:
+				cam_angle += CAM_ROT_SPEED;
+				break;
+			case GLFW_KEY_D:
+				cam_angle -= CAM_ROT_SPEED;
+				break;
+			case GLFW_KEY_SPACE:
+				cam_z += CAM_SPEED;
+				break;
+			case GLFW_KEY_Z:
+				cam_z -= CAM_SPEED;
+				break;
+			default:
+				break;
+			case GLFW_KEY_UP:
+				cam_pitch += CAM_ROT_SPEED;
+				if (cam_pitch > 89.0f) cam_pitch = 89.0f;
+				break;
+			case GLFW_KEY_DOWN:
+				cam_pitch -= CAM_ROT_SPEED;
+				if (cam_pitch < -89.0f) cam_pitch = -89.0f;
+				break;
+			case GLFW_KEY_LEFT:
+				cam_angle += CAM_ROT_SPEED;
+				break;
+			case GLFW_KEY_RIGHT:
+				cam_angle -= CAM_ROT_SPEED;
+				break;
+			// view modes
+			case GLFW_KEY_F:
+				if (is_pressed) glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+				break;
+			case GLFW_KEY_P:
+				if (is_pressed) glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
+		}
 }
 }
 
@@ -188,6 +197,11 @@ int main(int argc, char** argv)
         myEngine.setViewMatrix(viewMatrix);
         myEngine.updateMvMatrix();
 
+		if (lightingEnabled)
+			myEngine.switchToPhongShading();
+		else
+			myEngine.switchToFlatShading();
+			
 		drawScene(); // draws objects 
 		
 		/* Swap front and back buffers */

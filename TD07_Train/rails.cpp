@@ -1,6 +1,6 @@
 #include "tools/basic_mesh.hpp"
 #include "rails.hpp"
-
+#include "draw_scene.hpp"
 constexpr float Rail::rr;
 
 void Rail::initCurvedRails()
@@ -182,7 +182,7 @@ void Rail::drawStraightRails(GLBI_Engine& myEngine)
 
 void Rail::drawCurvedRails(GLBI_Engine& myEngine)
 {
-    myEngine.switchToPhongShading();
+    if (lightingEnabled) myEngine.switchToPhongShading();
     // great part
     myEngine.mvMatrixStack.pushMatrix();
     // myEngine.mvMatrixStack.addHomothety(Vector3D(1.5f, 1.5f, 1.5f));
