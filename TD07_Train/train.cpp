@@ -313,39 +313,82 @@ void drawWheel(GLBI_Engine& myEngine, float posX, float posY)
     myEngine.updateMvMatrix();
 }
 
+void drawTire(GLBI_Engine& myEngine, float posX, float posY)
+{
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addRotation(M_PI/2, Vector3D(0.0, 0.0, 1.0));
+    myEngine.mvMatrixStack.addTranslation(Vector3D(posX, posY, 4.0f));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(0.82, 0.082, 0.82));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(darkGrey, darkGrey, darkGrey);
+    meshCylinder->draw();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+}
+
 void drawWheels(GLBI_Engine& myEngine, float posX, float posY)
 {
+    int nb_rims {16}; // number of rectangles inside rims of wheels
+
     for (int i {0} ; i < 3 ; i++)
     {
-        drawWheel(myEngine, posX + i*10.0, posY); // left side wheel
-        drawWheel(myEngine, posX + i*10.0, -posY-2.5); // right side wheel
+        // left side wheels
+        drawWheel(myEngine, posX + i*10.0, posY);
+        drawTire(myEngine, posX + i*10.0, posY);
+        // right side wheels
+        drawWheel(myEngine, posX + i*10.0, -posY-2.5);
+        drawTire(myEngine, posX + i*10.0,  -posY-2.5);
 
         // inside of wheels 
-        // left side wheel
-        for (int j {0}; j < 8; j++)
+        // left side rim
+        // sphere in center 
+        myEngine.mvMatrixStack.pushMatrix();
+        myEngine.mvMatrixStack.addTranslation(Vector3D(posY+1.5, posX+ i*10.0, 4.0f)); // sphere is not rotated compared to cylinder
+        myEngine.mvMatrixStack.addHomothety(Vector3D(0.05, 0.25, 0.25)); // flattened on x
+        myEngine.updateMvMatrix();
+        myEngine.setFlatColor(0.f, 0.f, blue);
+        meshSphere->draw();
+        myEngine.mvMatrixStack.popMatrix();
+        myEngine.updateMvMatrix();
+        // rectangles inside
+        for (int j {0}; j < nb_rims; j++)
         {
             myEngine.mvMatrixStack.pushMatrix();
-            myEngine.mvMatrixStack.addTranslation(Vector3D(posX, posY, 4.0f));       // centre exact de la roue
-            myEngine.mvMatrixStack.addRotation((2*M_PI/8)*j, Vector3D(0.0, 1.0, 0.0)); // cercle complet autour de Y
-            myEngine.mvMatrixStack.addTranslation(Vector3D(0.0f, 0.0f, 2.5f));         // décalage radial (ajuste selon rayon roue)
-            myEngine.mvMatrixStack.addHomothety(Vector3D(0.05f, 0.8f, 0.15f));
+            myEngine.mvMatrixStack.addRotation(M_PI/2, Vector3D(0.0, 0.0, 1.0));
+            myEngine.mvMatrixStack.addTranslation(Vector3D(posX+ i*10.0, posY+1.5, 4.0f)); // same position as wheel
+            myEngine.mvMatrixStack.addRotation((2*M_PI/nb_rims)*j, Vector3D(0.0, 1.0, 0.0)); // rotation around center of wheel
+            myEngine.mvMatrixStack.addTranslation(Vector3D(0.0f, 0.0f, 2.5f));
+            myEngine.mvMatrixStack.addRotation(M_PI/2, Vector3D(1.0, 0.0, 0.0)); // aligning them w the wheel
+            myEngine.mvMatrixStack.addHomothety(Vector3D(0.08f, 3.0f, 0.25f));
             myEngine.updateMvMatrix();
-            myEngine.setFlatColor(0.9f, 0.9f, 0.9f);
+            myEngine.setFlatColor(0.0, 0.0, blue);
             meshCube->draw();
             myEngine.mvMatrixStack.popMatrix();
             myEngine.updateMvMatrix();
         }
 
-        // right side wheel
-        for (int j {0}; j < 8; j++)
+        // right side rim
+        // sphere in center 
+        myEngine.mvMatrixStack.pushMatrix();
+        myEngine.mvMatrixStack.addTranslation(Vector3D(-(posY+1.5), posX+ i*10.0, 4.0f)); // sphere is not rotated compared to cylinder
+        myEngine.mvMatrixStack.addHomothety(Vector3D(0.05, 0.25, 0.25)); // flattened on x
+        myEngine.updateMvMatrix();
+        myEngine.setFlatColor(0.f, 0.f, blue);
+        meshSphere->draw();
+        myEngine.mvMatrixStack.popMatrix();
+        myEngine.updateMvMatrix();
+        // rectangles inside
+        for (int j {0}; j < nb_rims; j++)
         {
             myEngine.mvMatrixStack.pushMatrix();
-            myEngine.mvMatrixStack.addTranslation(Vector3D(posX, -posY - 2.5f, 4.0f));
-            myEngine.mvMatrixStack.addRotation((2*M_PI/8)*j, Vector3D(0.0, 1.0, 0.0));
+            myEngine.mvMatrixStack.addRotation(M_PI/2, Vector3D(0.0, 0.0, 1.0));
+            myEngine.mvMatrixStack.addTranslation(Vector3D(posX+ i*10.0, -(posY+1.5), 4.0f)); // same position as wheel
+            myEngine.mvMatrixStack.addRotation((2*M_PI/nb_rims)*j, Vector3D(0.0, 1.0, 0.0)); // rotation around center of wheel
             myEngine.mvMatrixStack.addTranslation(Vector3D(0.0f, 0.0f, 2.5f));
-            myEngine.mvMatrixStack.addHomothety(Vector3D(0.05f, 0.8f, 0.15f));
+            myEngine.mvMatrixStack.addRotation(M_PI/2, Vector3D(1.0, 0.0, 0.0)); // aligning them w the wheel
+            myEngine.mvMatrixStack.addHomothety(Vector3D(0.08f, 3.0f, 0.25f));
             myEngine.updateMvMatrix();
-            myEngine.setFlatColor(0.9f, 0.9f, 0.9f);
+            myEngine.setFlatColor(0.0, 0.0, blue);
             meshCube->draw();
             myEngine.mvMatrixStack.popMatrix();
             myEngine.updateMvMatrix();
@@ -405,5 +448,11 @@ void drawTrain(GLBI_Engine& myEngine)
     drawUpperBody(myEngine); // everything but wheels
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
-    drawWheels(myEngine, 17.0, 7.0);
+
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(0.0, 0.0, 0.2)); // moving it upwards
+    myEngine.updateMvMatrix();
+    drawWheels(myEngine, 17.0, 7.0); // wheels
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
 }
