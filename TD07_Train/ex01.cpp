@@ -54,7 +54,7 @@ void onKey(GLFWwindow* window, int key, int /*scancode*/, int action, int /*mods
 
 	switch(key) 
 	{
- 		case GLFW_KEY_W:
+ 		case GLFW_KEY_W :
             cam_x += fx * CAM_SPEED;
             cam_y += fy * CAM_SPEED;
             break;
@@ -71,11 +71,25 @@ void onKey(GLFWwindow* window, int key, int /*scancode*/, int action, int /*mods
         case GLFW_KEY_SPACE:
             cam_z += CAM_SPEED;
             break;
-        case GLFW_KEY_LEFT_SHIFT:
+        case GLFW_KEY_Z:
             cam_z -= CAM_SPEED;
             break;
         default:
             break;
+		case GLFW_KEY_UP:
+			cam_pitch += CAM_ROT_SPEED;
+			if (cam_pitch > 89.0f) cam_pitch = 89.0f;
+			break;
+		case GLFW_KEY_DOWN:
+			cam_pitch -= CAM_ROT_SPEED;
+			if (cam_pitch < -89.0f) cam_pitch = -89.0f;
+			break;
+		case GLFW_KEY_LEFT:
+			cam_angle += CAM_ROT_SPEED;
+			break;
+		case GLFW_KEY_RIGHT:
+			cam_angle -= CAM_ROT_SPEED;
+			break;
 	}
 }
 }
@@ -166,8 +180,9 @@ int main(int argc, char** argv)
 	
 		// spherical coordinates : 
         float rad = deg2rad(cam_angle);
+		float pitch = deg2rad(cam_pitch);
         Vector3D pos_camera(cam_x, cam_y, cam_z);
-        Vector3D viewed_point(cam_x + cos(rad),cam_y + sin(rad),cam_z );
+        Vector3D viewed_point(cam_x + cos(rad) * cos(pitch),cam_y + sin(rad) * cos(pitch),cam_z + sin(pitch));
         Vector3D up_vector(0.0f, 0.0f, 1.0f);
         Matrix4D viewMatrix = Matrix4D::lookAt(pos_camera, viewed_point, up_vector);
         myEngine.setViewMatrix(viewMatrix);

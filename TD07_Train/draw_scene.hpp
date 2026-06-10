@@ -19,6 +19,7 @@ extern STP3D::IndexedMesh* meshCylinder;
 extern float cam_x, cam_y, cam_z;
 extern float cam_angle;
 extern bool lightingEnabled;
+extern float cam_pitch;
 
 /* OpenGL Engine */
 extern GLBI_Engine myEngine;

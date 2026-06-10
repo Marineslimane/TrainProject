@@ -12,6 +12,7 @@ float cam_x {0.0f};
 float cam_y {-20.0f};
 float cam_z {5.0f};
 float cam_angle {90.0f};
+float cam_pitch {0.0f};
 bool lightingEnabled {true};
 GLBI_Engine myEngine;
 GLBI_Set_Of_Points somePoints(3);
@@ -76,14 +77,14 @@ void initScene()
     }
     
     //light
-    myEngine.switchToPhongShading();
+    if (lightingEnabled) myEngine.switchToPhongShading();
     myEngine.setLightPosition({2.0f, -3.0f, 5.0f, 0.0f}, 0);
     myEngine.setLightIntensity({1.2f, 1.1f, 0.9f}, 0);
     myEngine.addALight({-1.0f, 1.0f, 3.0f, 0.0f}, {0.3f, 0.4f, 0.5f});
     myEngine.setShininess(5.0f);
     myEngine.setSpecularColor({0.3f, 0.3f, 0.3f}); 
     myEngine.setAttenuationFactor({1.0f, 0.01f, 0.001f});
-    myEngine.switchToFlatShading();
+    if (lightingEnabled) myEngine.switchToFlatShading();
 }
 void drawGrid()
 {
