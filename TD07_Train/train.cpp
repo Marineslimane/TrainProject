@@ -810,6 +810,11 @@ void drawUpperBody(GLBI_Engine& myEngine) // draws everything but wheels
 
 void drawTrain(GLBI_Engine& myEngine)
 {
+    // rescaling entire train to fit one square of grid
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addHomothety(Vector3D(0.3, 0.3, 0.3));
+    myEngine.updateMvMatrix();
+
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(0.0, 0.0, 5.0)); // moving it upwards
     myEngine.updateMvMatrix();
@@ -821,6 +826,21 @@ void drawTrain(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.addTranslation(Vector3D(0.0, 0.0, 0.2)); // moving it upwards
     myEngine.updateMvMatrix();
     drawWheels(myEngine, 17.0, 7.0); // wheels
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+}
+
+void drawPositionnedTrain(GLBI_Engine& myEngine, float posX, float posY)
+{
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(posX, posY, 0.0));
+    myEngine.updateMvMatrix();
+
+    drawTrain(myEngine);
+
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 }

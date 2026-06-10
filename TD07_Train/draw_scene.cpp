@@ -3,6 +3,7 @@
 #include "train_station.hpp"
 #include "rails.hpp"
 #include "train.hpp"
+#include "circuit.hpp"
 
 /// Camera parameters
 float angle_theta {90.0};      // Angle between x axis and viewpoint
@@ -48,6 +49,8 @@ void initScene()
     initTrain();
     // train station
     initTrainStation();
+    // json
+    initCircuit();
 }
 
 void drawGrid()
@@ -88,10 +91,11 @@ void drawScene()
     drawGrid(); // draws grid
 
     // draws rails
-    rails.drawStraightTrack(myEngine, 5, 0.0f, 0.0f, squareSize); // straight line
-    rails.drawPositionnedCurvedRails(myEngine, 0.5, 0.125, squareSize, -M_PI/2);
+    // rails.drawStraightTrack(myEngine, 5, 0.0f, 0.0f, squareSize); // straight line
+    // rails.drawPositionnedCurvedRails(myEngine, 0.5, 0.125, squareSize, -M_PI/2);
+    drawCircuit(myEngine, rails);
     // draws train
-    drawTrain(myEngine);
+    drawPositionnedTrain(myEngine, 25.0, 20.0);
     // trainstation
     drawTrainStation(myEngine, 60.0, 10.0);
 }

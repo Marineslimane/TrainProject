@@ -8,6 +8,7 @@ set(OUTPUT_BIN_FOLDER ${CMAKE_SOURCE_DIR}/bin)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Librairies
+add_compile_definitions(_USE_MATH_DEFINES) # M_PI issue
 
 # ---Add GL---
 find_package(OpenGL REQUIRED)

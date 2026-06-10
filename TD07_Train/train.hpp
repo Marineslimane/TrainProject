@@ -30,3 +30,5 @@ void drawUpperBody(GLBI_Engine& myEngine);
 void drawTire(GLBI_Engine& myEngine, float posX, float posY);
 
 void drawTrain(GLBI_Engine& myEngine);
+
+void drawPositionnedTrain(GLBI_Engine& myEngine, float posX, float posY);
