@@ -116,7 +116,6 @@ void onMouseButton(GLFWwindow* window, int button, int action, int /*mods*/)
 
 int main(int argc, char** argv) // argc : nb of arguments, argv : arguments
 {
-	std::cerr << "Working directory: " << std::filesystem::current_path() << std::endl;
 	// JSON
     if (argc < 2) // if less than 2 parameters entered
 	{
