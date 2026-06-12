@@ -43,18 +43,97 @@ void initCircuit(const std::string& path)
     circuit = loadCircuit(path);
 }
 
-void drawCircuit(GLBI_Engine& myEngine, Rail& rails)
+RailChoice getRailType(RailCellCoord pos, RailCellCoord previous, RailCellCoord next)
 {
-    std::vector<TrackCell> cells {circuit.cells};
-    int squareSize {circuit.squareSize};
+    // directions
+    int inX  = pos.x - previous.x;
+    int inY  = pos.y - previous.y;
+    int outX = next.x - pos.x;
+    int outY = next.y - pos.y;
 
-    for (int i {0}; i < (int)cells.size(); i++) 
+    // straight rails
+    if (inX == outX && inY == outY) // same directions between previous and next
     {
-        // converting coordinates in 3D world (based on grid)
-        float posX = cells[i].x * squareSize;
-        float posY = cells[i].y * squareSize;
+        if (inX != 0) // horizontal
+        {
+            return RailChoice::straightHoriz;
+        }
+        else // vertical
+        {
+            return RailChoice::straightVert;
+        }
+    }
 
-        rails.drawStraightTrack(myEngine, 1, posX, posY, squareSize);
+    // curved rails
+    if (inX ==  1 && outY ==  1) return RailChoice::curvedTopRight;
+    if (inX ==  1 && outY == -1) return RailChoice::curvedBottomRight;
+    if (inX == -1 && outY ==  1) return RailChoice::curvedTopLeft;
+    if (inX == -1 && outY == -1) return RailChoice::curvedBottomLeft;
+    if (inY ==  1 && outX ==  1) return RailChoice::curvedBottomRight;
+    if (inY ==  1 && outX == -1) return RailChoice::curvedTopLeft;
+    if (inY == -1 && outX ==  1) return RailChoice::curvedTopRight;
+    if (inY == -1 && outX == -1) return RailChoice::curvedBottomLeft;
+
+    return RailChoice::straightHoriz; // default
+}
+
+float curvedAngle(RailChoice type)
+{
+    switch (type) 
+    {
+        case RailChoice::curvedTopRight : 
+            return 0.0f; // default
+        case RailChoice::curvedTopLeft: 
+            return M_PI/2.0f;
+        case RailChoice::curvedBottomLeft: 
+            return M_PI;
+        case RailChoice::curvedBottomRight: 
+            return -M_PI/2.0f;
+        default: return 0.0f;
     }
 }
 
+void drawCircuit(GLBI_Engine& myEngine, Rail& rails)
+{
+    std::vector<RailCellCoord> cells {circuit.cells};
+    int squareSize {circuit.squareSize};
+    int n {(int)cells.size()};
+
+    for (int i {0}; i < n; i++) 
+    {
+        // making sure the circuit closes
+        RailCellCoord previous = cells[(i - 1 + n) % n];
+        RailCellCoord current = cells[i];
+        RailCellCoord next = cells[(i + 1) % n];
+
+        // converting coordinates in 3D world (based on grid)
+        float posX = current.x * squareSize;
+        float posY = current.y * squareSize;
+
+        // identifying rail type
+        RailChoice type = getRailType(current, previous, next);
+
+        // drawing rail
+        if (type == RailChoice::straightHoriz || type == RailChoice::straightVert) // straight rail
+        {
+            float angle {0.0f}; // horizontal case
+
+            if (type == RailChoice::straightVert)
+            {
+                angle = M_PI / 2.0f; 
+            }
+            
+            myEngine.mvMatrixStack.pushMatrix();
+            myEngine.mvMatrixStack.addTranslation(Vector3D(posX, posY, 0.0f));
+            myEngine.mvMatrixStack.addRotation(angle, Vector3D(0.0f, 0.0f, 1.0f));
+            myEngine.updateMvMatrix();
+            rails.drawStraightRails(myEngine);
+            myEngine.mvMatrixStack.popMatrix();
+            myEngine.updateMvMatrix();
+        }
+       else // curved rail
+        {
+            rails.drawPositionnedCurvedRails(myEngine, posX, posY, type, squareSize);
+        }
+    }
+}

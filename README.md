@@ -1,7 +1,9 @@
 # Thomas le train !!
 
 ## Lancement et controle du programme
-Le programme se lance en éxecutant le fichier JSON ("../TD07_Train/circuit.json")
+- se mettre dans TD07_Train
+- run le programme avec "../bin/TD07_Trainex01.exe" "circuit.json"
+- pour rebuild : cmake --build "C:/Users/marin/Documents/IMAC/TrainProject/build"
 
 ## Controle 
 *(Les controles sont en AZERTY mais la bibliotheque etant en QWERTY nous avons adapté les controles)*

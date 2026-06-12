@@ -151,5 +151,5 @@ void drawScene()
     // draws train
     drawPositionnedTrain(myEngine, 25.0, 20.0);
     // draws trainstation
-    drawTrainStation(myEngine, 60.0, 10.0);
+    //drawTrainStation(myEngine, 60.0, 10.0);
 }

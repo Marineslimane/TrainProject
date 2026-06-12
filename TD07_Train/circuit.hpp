@@ -5,7 +5,7 @@
 
 #include "rails.hpp"
 
-struct TrackCell
+struct RailCellCoord
 {
     int x;
     int y;
@@ -13,8 +13,18 @@ struct TrackCell
 
 struct CircuitData 
 {
-    std::vector<TrackCell> cells;
+    std::vector<RailCellCoord> cells;
     int squareSize;
+};
+
+enum class RailChoice // all possibilities for rail placement
+{
+    straightHoriz,
+    straightVert,
+    curvedTopLeft,
+    curvedTopRight,
+    curvedBottomLeft,
+    curvedBottomRight
 };
 
 CircuitData loadCircuit(const std::string& path);
