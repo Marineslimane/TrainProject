@@ -252,13 +252,48 @@ void Rail::drawStraightTrack(GLBI_Engine& myEngine, int nbRails, float startX, f
     }
 }
 
-void Rail::drawPositionnedCurvedRails(GLBI_Engine& myEngine, float startX, float startY, float squareSize, float angle)
-{   
+void Rail::drawPositionnedCurvedRails(GLBI_Engine& myEngine, float posX, float posY, RailChoice type, float squareSize)
+{
     myEngine.mvMatrixStack.pushMatrix();
-    myEngine.mvMatrixStack.addTranslation(Vector3D(startX, startY * squareSize, 0.0f));
+
+    float tx = posX;
+    float ty = posY;
+    float angle = 0.0f;
+
+    switch (type)
+    {
+        case RailChoice::curvedTopRight:
+            // arc already in +X+Y quadrant, anchor at bottom-left of cell
+            tx = posX;
+            ty = posY;
+            angle = 0.0f;
+            break;
+        case RailChoice::curvedTopLeft:
+            // rotate 90° CCW, re-anchor to bottom-right of cell
+            tx = posX + squareSize;
+            ty = posY;
+            angle = M_PI / 2.0f;
+            break;
+        case RailChoice::curvedBottomLeft:
+            // rotate 180°, re-anchor to top-right of cell
+            tx = posX + squareSize;
+            ty = posY + squareSize;
+            angle = M_PI;
+            break;
+        case RailChoice::curvedBottomRight:
+            // rotate 270° CCW, re-anchor to top-left of cell
+            tx = posX;
+            ty = posY + squareSize;
+            angle = -M_PI / 2.0f;
+            break;
+        default: break;
+    }
+
+    myEngine.mvMatrixStack.addTranslation(Vector3D(tx, ty, 0.0f));
     myEngine.mvMatrixStack.addRotation(angle, Vector3D(0.0f, 0.0f, 1.0f));
     myEngine.updateMvMatrix();
     drawCurvedRails(myEngine);
+
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 }
