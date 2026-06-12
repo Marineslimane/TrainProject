@@ -20,7 +20,7 @@ extern float cam_x, cam_y, cam_z;
 extern float cam_angle;
 extern bool lightingEnabled;
 extern float cam_pitch;
-
+extern float trainPosX, trainPosY;
 /* OpenGL Engine */
 extern GLBI_Engine myEngine;
 extern STP3D::StandardMesh* groundMesh;

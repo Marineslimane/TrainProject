@@ -173,7 +173,7 @@ int main(int argc, char** argv) // argc : nb of arguments, argv : arguments
 		double startTime = glfwGetTime();
 
 		/* Render begins here */
-		glClearColor(0.67f,0.84f,0.9f,0.0f); // color of the background, currently  : light blue
+		glClearColor(0.286, 0.29, 0.478,0.0f); // color of the background, currently  : light blue
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // reinitializes scene 
 		glEnable(GL_DEPTH_TEST); // z-buffer activated (depth)

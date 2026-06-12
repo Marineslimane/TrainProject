@@ -30,6 +30,9 @@ STP3D::StandardMesh* meshCone = nullptr;
 
 GLBI_Texture grassTexture;
 
+//position train 
+float trainPosX {25.0f};
+float trainPosY {20.0f};
 // Rail parameters
 const float posY {5.0};
 
@@ -92,14 +95,19 @@ void initScene(const std::string& jsonPath)
     }
     
     //light
-    if (lightingEnabled) myEngine.switchToPhongShading();
-    myEngine.setLightPosition({2.0f, -3.0f, 5.0f, 0.0f}, 0);
-    myEngine.setLightIntensity({1.2f, 1.1f, 0.9f}, 0);
-    myEngine.addALight({-1.0f, 1.0f, 3.0f, 0.0f}, {0.3f, 0.4f, 0.5f});
-    myEngine.setShininess(5.0f);
-    myEngine.setSpecularColor({0.3f, 0.3f, 0.3f}); 
-    myEngine.setAttenuationFactor({1.0f, 0.01f, 0.001f});
-    if (lightingEnabled) myEngine.switchToFlatShading();
+    myEngine.switchToPhongShading();
+
+    //Soleil directionnel
+    myEngine.setLightPosition({5.0f, -5.0f, 8.0f, 0.0f}, 0);
+    myEngine.setLightIntensity({0.5f, 0.4f, 0.1f}, 0);
+
+    //Phare du train
+    myEngine.addALight({trainPosX, trainPosY + 0.6f, 2.1f, 1.0f}, {3.0f, 3.0f, 2.0f});
+    myEngine.setShininess(0.2f);
+    myEngine.setSpecularColor({0.2f, 0.2f, 0.15f});
+    myEngine.setAttenuationFactor({1.0f, 0.05f, 0.01f});
+    myEngine.switchToFlatShading();
+
     // train
     initTrain();
     // train station
@@ -140,6 +148,16 @@ void drawScene()
     glPointSize(10.0);
     somePoints.drawSet();
     enableLighting();
+
+    if (lightingEnabled) {
+        myEngine.switchToPhongShading();
+        myEngine.setLightPosition(
+            {trainPosX, trainPosY + 0.6f, 2.1f, 1.0f}, // w=1 = ponctuelle
+            1 // lumière numéro 1
+        );
+        myEngine.switchToFlatShading();
+    }
+
     drawGrid();
     
     // draws objects
@@ -149,7 +167,7 @@ void drawScene()
     // rails.drawPositionnedCurvedRails(myEngine, 0.5, 0.125, squareSize, -M_PI/2);
     drawCircuit(myEngine, rails);
     // draws train
-    drawPositionnedTrain(myEngine, 25.0, 20.0);
+    drawPositionnedTrain(myEngine, trainPosX, trainPosY);
     // draws trainstation
     //drawTrainStation(myEngine, 60.0, 10.0);
 }
