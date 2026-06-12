@@ -4,6 +4,7 @@
 #include <fstream> // for json
 
 #include "rails.hpp"
+#include "rail_types.hpp" // for RailChoice
 
 struct RailCellCoord
 {
@@ -17,18 +18,14 @@ struct CircuitData
     int squareSize;
 };
 
-enum class RailChoice // all possibilities for rail placement
-{
-    straightHoriz,
-    straightVert,
-    curvedTopLeft,
-    curvedTopRight,
-    curvedBottomLeft,
-    curvedBottomRight
-};
-
 CircuitData loadCircuit(const std::string& path);
 
 void initCircuit(const std::string& path);
+
+RailChoice getRailType(RailCellCoord pos, RailCellCoord previous, RailCellCoord next);
+
+float curvedAngle(RailChoice type);
+
+
 
 void drawCircuit(GLBI_Engine& myEngine, Rail& rails);
