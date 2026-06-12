@@ -38,7 +38,6 @@ void onWindowResized(GLFWwindow* /*window*/, int width, int height)
 void onKey(GLFWwindow* window, int key, int /*scancode*/, int action, int /*mods*/)
 {
 	int is_pressed {action == GLFW_PRESS};
-	int is_repeated {action == GLFW_REPEAT};
 
 	//fps
     if (action == GLFW_PRESS || action == GLFW_REPEAT)

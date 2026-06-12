@@ -57,7 +57,7 @@ void initScene()
     meshCone = STP3D::basicCone(1.0f, 1.0f);
     meshCone->createVAO();
  
-    rails.initStraightRails();
+    rails.initStraightRails();  
     rails.initCurvedRails();
     initTrainStation();
     initKenny();
