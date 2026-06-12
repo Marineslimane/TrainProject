@@ -5,7 +5,7 @@
 #include "glbasimac/GLBI_Convex_2D_Shape.hpp"
 #include "tools/basic_mesh.hpp"
 
-#include "circuit.hpp" // for RailChoice
+#include "rail_types.hpp" // for RailChoice
 
 using namespace glbasimac;
 
@@ -45,5 +45,5 @@ struct Rail
     void drawStraightRails(GLBI_Engine& myEngine); // draws both rails
     void drawStraightTrack(GLBI_Engine& myEngine, int nbRails, float startX, float startY, float squareSize);
     void drawCurvedRails(GLBI_Engine& myEngine);
-    void Rail::drawPositionnedCurvedRails(GLBI_Engine& myEngine, float posX, float posY, RailChoice type, float squareSize);
+    void drawPositionnedCurvedRails(GLBI_Engine& myEngine, float posX, float posY, RailChoice type, float squareSize);
 };
