@@ -6,6 +6,7 @@
 #include "kenny.hpp"
 #define STB_IMAGE_IMPLEMENTATION
 #include "tools/stb_image.h"
+#include "circuit.hpp"
 
 /// Camera parameters
 float cam_x {0.0f};
@@ -32,14 +33,17 @@ GLBI_Texture grassTexture;
 // Rail parameters
 const float posY {5.0};
 
-void enableLighting() {
+void enableLighting() 
+{
     if (lightingEnabled) myEngine.switchToPhongShading();
 }
 
-void disableLighting() {
+void disableLighting() 
+{
     if (lightingEnabled) myEngine.switchToFlatShading();
 }
-void initScene()
+
+void initScene(const std::string& jsonPath)
 {
     std::vector<float> points {0.0, 0.0, 0.0};
     somePoints.initSet(points, 1.0, 1.0, 1.0);
@@ -69,9 +73,13 @@ void initScene()
     int gw, gh, gn;
     stbi_set_flip_vertically_on_load(true);
     unsigned char* grassPixels = stbi_load("../assets/textures/herbe.png", &gw, &gh, &gn, 0);
-    if (grassPixels == nullptr) {
+
+    if (grassPixels == nullptr)
+    {
         std::cerr << "Erreur texture herbe" << std::endl;
-    } else {
+    } 
+    else 
+    {
         grassTexture.attachTexture();
         grassTexture.loadImage(gw, gh, gn, grassPixels);
         grassTexture.setParameters(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -92,7 +100,14 @@ void initScene()
     myEngine.setSpecularColor({0.3f, 0.3f, 0.3f}); 
     myEngine.setAttenuationFactor({1.0f, 0.01f, 0.001f});
     if (lightingEnabled) myEngine.switchToFlatShading();
+    // train
+    initTrain();
+    // train station
+    initTrainStation();
+    // json
+    initCircuit(jsonPath);
 }
+
 void drawGrid()
 {
 
@@ -127,16 +142,14 @@ void drawScene()
     enableLighting();
     drawGrid();
     
-    // draws rails
-    rails.drawStraightTrack(myEngine, 5, 0.0f, 0.0f, squareSize); // straight line
-    rails.drawPositionnedCurvedRails(myEngine, 0.5, 0.125, squareSize, -M_PI/2);
-
     // draws objects
-
     drawKenny(10.0f, 0.0f, 0.0f);
-    drawFace(myEngine);
-    drawEyebrow(myEngine);
-    drawMouth(myEngine);
-    drawBody(myEngine);
     drawTrainStation(myEngine, -20.0, 10.0);
+    // rails.drawStraightTrack(myEngine, 5, 0.0f, 0.0f, squareSize); // straight line
+    // rails.drawPositionnedCurvedRails(myEngine, 0.5, 0.125, squareSize, -M_PI/2);
+    drawCircuit(myEngine, rails);
+    // draws train
+    drawPositionnedTrain(myEngine, 25.0, 20.0);
+    // draws trainstation
+    drawTrainStation(myEngine, 60.0, 10.0);
 }
