@@ -13,49 +13,49 @@ void Rail::initCurvedRails()
     std::vector<float> greatLeftFaceVertices {};
     std::vector<float> greatRightFaceVertices {};
 
-    float greatRadius {7.0};
-    float smallRadius {(float)(7.0 - sr)};
+    float greatRadius {7.0 + sr/2};
+    float smallRadius {(float)(7.0 - sr/2)};
 
     for (int i {0} ; i < nbTriangles ; i++)
     {
-        float angle {i*(((float)M_PI/2)/nbTriangles)};
+        float angle {i*((((float)M_PI/2)+0.2)/nbTriangles)};
 
         // nb : no need to rotate triangles since TRIANGLE_STRIP automatically joins vertices
         // triangles along greatRadius
         greatTopFaceVertices.push_back(greatRadius*cos(angle)); // x coordinate
         greatTopFaceVertices.push_back(greatRadius*sin(angle)); // y coordinate
-        greatTopFaceVertices.push_back(rr+sr); // z coordinate
+        greatTopFaceVertices.push_back(rr+sr+sr/2); // z coordinate
         // triangles along smallRadius
         greatTopFaceVertices.push_back(smallRadius*cos(angle)); // x coordinate
         greatTopFaceVertices.push_back(smallRadius*sin(angle)); // y coordinate
-        greatTopFaceVertices.push_back(rr+sr); // z coordinate
+        greatTopFaceVertices.push_back(rr+sr+sr/2); // z coordinate
 
         // triangles along greatRadius
         greatBottomFaceVertices.push_back(greatRadius*cos(angle)); // x coordinate
         greatBottomFaceVertices.push_back(greatRadius*sin(angle)); // y coordinate
-        greatBottomFaceVertices.push_back(rr); // z coordinate
+        greatBottomFaceVertices.push_back(rr+sr/2); // z coordinate
         // triangles along smallRadius
         greatBottomFaceVertices.push_back(smallRadius*cos(angle)); // x coordinate
         greatBottomFaceVertices.push_back(smallRadius*sin(angle)); // y coordinate
-        greatBottomFaceVertices.push_back(rr); // z coordinate
+        greatBottomFaceVertices.push_back(rr+sr/2); // z coordinate
 
         // triangles along greatRadius
         greatLeftFaceVertices.push_back(smallRadius*cos(angle)); // x coordinate
         greatLeftFaceVertices.push_back(smallRadius*sin(angle)); // y coordinate
-        greatLeftFaceVertices.push_back(rr+sr); // z coordinate
+        greatLeftFaceVertices.push_back(rr+sr+sr/2); // z coordinate
         // triangles along smallRadius
         greatLeftFaceVertices.push_back(smallRadius*cos(angle)); // x coordinate
         greatLeftFaceVertices.push_back(smallRadius*sin(angle)); // y coordinate
-        greatLeftFaceVertices.push_back(rr); // z coordinate
+        greatLeftFaceVertices.push_back(rr+sr/2); // z coordinate
 
         // triangles along greatRadius
         greatRightFaceVertices.push_back(greatRadius*cos(angle)); // x coordinate
         greatRightFaceVertices.push_back(greatRadius*sin(angle)); // y coordinate
-        greatRightFaceVertices.push_back(rr+sr); // z coordinate
+        greatRightFaceVertices.push_back(rr+sr+sr/2); // z coordinate
         // triangles along smallRadius
         greatRightFaceVertices.push_back(greatRadius*cos(angle)); // x coordinate
         greatRightFaceVertices.push_back(greatRadius*sin(angle)); // y coordinate
-        greatRightFaceVertices.push_back(rr); // z coordinate
+        greatRightFaceVertices.push_back(rr+sr/2); // z coordinate
     }
 
     greatTopFace.initShape(greatTopFaceVertices);
@@ -75,49 +75,49 @@ void Rail::initCurvedRails()
     std::vector<float> smallLeftFaceVertices {};
     std::vector<float> smallRightFaceVertices {};
 
-    float greatRadius2 {3.0};
-    float smallRadius2 {3.0 - sr};
+    float greatRadius2 {3.0 + sr/2};
+    float smallRadius2 {3.0 - sr/2};
 
     for (int i {0} ; i < nbTriangles ; i++)
     {
-        float angle {i*(((float)M_PI/2)/nbTriangles)};
+        float angle {i*((((float)M_PI/2)+0.2)/nbTriangles)};
 
         // nb : no need to rotate triangles since TRIANGLE_STRIP automatically joins vertices
         // triangles along greatRadius2
         smallTopFaceVertices.push_back(greatRadius2*cos(angle)); // x coordinate
         smallTopFaceVertices.push_back(greatRadius2*sin(angle)); // y coordinate
-        smallTopFaceVertices.push_back(rr+sr); // z coordinate
+        smallTopFaceVertices.push_back(rr+sr+sr/2); // z coordinate
         // triangles along smallRadius2
         smallTopFaceVertices.push_back(smallRadius2*cos(angle)); // x coordinate
         smallTopFaceVertices.push_back(smallRadius2*sin(angle)); // y coordinate
-        smallTopFaceVertices.push_back(rr+sr); // z coordinate
+        smallTopFaceVertices.push_back(rr+sr+sr/2); // z coordinate
 
         // triangles along greatRadius2
         smallBottomFaceVertices.push_back(greatRadius2*cos(angle)); // x coordinate
         smallBottomFaceVertices.push_back(greatRadius2*sin(angle)); // y coordinate
-        smallBottomFaceVertices.push_back(rr); // z coordinate
+        smallBottomFaceVertices.push_back(rr+sr/2); // z coordinate
         // triangles along smallRadius2
         smallBottomFaceVertices.push_back(smallRadius2*cos(angle)); // x coordinate
         smallBottomFaceVertices.push_back(smallRadius2*sin(angle)); // y coordinate
-        smallBottomFaceVertices.push_back(rr); // z coordinate
+        smallBottomFaceVertices.push_back(rr+sr/2); // z coordinate
 
         // triangles along greatRadius2
         smallLeftFaceVertices.push_back(smallRadius2*cos(angle)); // x coordinate
         smallLeftFaceVertices.push_back(smallRadius2*sin(angle)); // y coordinate
-        smallLeftFaceVertices.push_back(rr+sr); // z coordinate
+        smallLeftFaceVertices.push_back(rr+sr+sr/2); // z coordinate
         // triangles along smallRadius2
         smallLeftFaceVertices.push_back(smallRadius2*cos(angle)); // x coordinate
         smallLeftFaceVertices.push_back(smallRadius2*sin(angle)); // y coordinate
-        smallLeftFaceVertices.push_back(rr); // z coordinate
+        smallLeftFaceVertices.push_back(rr+sr/2); // z coordinate
 
         // triangles along greatRadius2
         smallRightFaceVertices.push_back(greatRadius2*cos(angle)); // x coordinate
         smallRightFaceVertices.push_back(greatRadius2*sin(angle)); // y coordinate
-        smallRightFaceVertices.push_back(rr+sr); // z coordinate
+        smallRightFaceVertices.push_back(rr+sr+sr/2); // z coordinate
         // triangles along smallRadius2
         smallRightFaceVertices.push_back(greatRadius2*cos(angle)); // x coordinate
         smallRightFaceVertices.push_back(greatRadius2*sin(angle)); // y coordinate
-        smallRightFaceVertices.push_back(rr); // z coordinate
+        smallRightFaceVertices.push_back(rr+sr/2); // z coordinate
     }
 
     smallTopFace.initShape(smallTopFaceVertices);
@@ -142,7 +142,7 @@ void Rail::drawStraightRail(GLBI_Engine& myEngine, float posX)
 {
     myEngine.mvMatrixStack.pushMatrix();
 
-    myEngine.mvMatrixStack.addTranslation(Vector3D(posX, 5.0f, rr+sr));
+    myEngine.mvMatrixStack.addTranslation(Vector3D(posX, 5.0f, sr+rr));
     myEngine.mvMatrixStack.addHomothety(Vector3D(sr, 10.0f, sr));
 
     myEngine.updateMvMatrix();
@@ -185,11 +185,9 @@ void Rail::drawCurvedRails(GLBI_Engine& myEngine)
     if (lightingEnabled) myEngine.switchToPhongShading();
     // great part
     myEngine.mvMatrixStack.pushMatrix();
-    // myEngine.mvMatrixStack.addHomothety(Vector3D(1.5f, 1.5f, 1.5f));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(RAIL_R, RAIL_G, RAIL_B);
     // drawing faces of the rail 
-
     myEngine.setNormalForConvex2DShape(Vector3D(0.0f, 0.0f, 1.0f));
     greatTopFace.drawShape();
     myEngine.setNormalForConvex2DShape(Vector3D(0.0f, 0.0f, -1.0f));
@@ -203,7 +201,6 @@ void Rail::drawCurvedRails(GLBI_Engine& myEngine)
 
     // small part
     myEngine.mvMatrixStack.pushMatrix();
-    // myEngine.mvMatrixStack.addHomothety(Vector3D(1.5f, 1.5f, 1.5f));
     myEngine.updateMvMatrix();
     myEngine.setFlatColor(RAIL_R, RAIL_G, RAIL_B);
     // drawing faces of the rail 
@@ -256,37 +253,33 @@ void Rail::drawPositionnedCurvedRails(GLBI_Engine& myEngine, float posX, float p
 {
     myEngine.mvMatrixStack.pushMatrix();
 
-    float tx = posX;
-    float ty = posY;
-    float angle = 0.0f;
+    float tx, ty, angle;
 
     switch (type)
     {
         case RailChoice::curvedTopRight:
-            // arc already in +X+Y quadrant, anchor at bottom-left of cell
-            tx = posX;
-            ty = posY;
-            angle = 0.0f;
+            tx    =  posX;
+            ty    =  posY + squareSize;
+            angle = M_PI+M_PI/2;
             break;
         case RailChoice::curvedTopLeft:
-            // rotate 90° CCW, re-anchor to bottom-right of cell
-            tx = posX + squareSize;
-            ty = posY;
-            angle = M_PI / 2.0f;
-            break;
-        case RailChoice::curvedBottomLeft:
-            // rotate 180°, re-anchor to top-right of cell
-            tx = posX + squareSize;
-            ty = posY + squareSize;
-            angle = M_PI;
+            tx    = posX;
+            ty    = posY;
+            angle = -M_PI-M_PI/2-M_PI/2;
             break;
         case RailChoice::curvedBottomRight:
-            // rotate 270° CCW, re-anchor to top-left of cell
-            tx = posX;
-            ty = posY + squareSize;
-            angle = -M_PI / 2.0f;
+            tx    = posX + squareSize;
+            ty    = posY + squareSize;
+            angle = M_PI;
             break;
-        default: break;
+        case RailChoice::curvedBottomLeft:
+            tx    = posX + squareSize;;
+            ty    = posY;
+            angle = M_PI-M_PI/2;
+            break;
+        default:
+            tx = posX; ty = posY; angle = 0.0f;
+            break;
     }
 
     myEngine.mvMatrixStack.addTranslation(Vector3D(tx, ty, 0.0f));

@@ -50,26 +50,21 @@ RailChoice getRailType(RailCellCoord pos, RailCellCoord previous, RailCellCoord 
     int outX = next.x - pos.x;
     int outY = next.y - pos.y;
 
+    if (abs(inX) > 1 || abs(inY) > 1 || abs(outX) > 1 || abs(outY) > 1)
+        return RailChoice::straightHoriz;
+
     // straight
     if (inX == outX && inY == outY)
         return (inX != 0) ? RailChoice::straightHoriz : RailChoice::straightVert;
 
-    // coming from left (inX=+1), going up (outY=+1) : bottom-left corner
-    if (inX ==  1 && outY ==  1) return RailChoice::curvedBottomLeft;
-    // coming from left (inX=+1), going down (outY=-1) : top-left corner  
-    if (inX ==  1 && outY == -1) return RailChoice::curvedTopLeft;
-    // coming from right (inX=-1), going up (outY=+1) : bottom-right corner
-    if (inX == -1 && outY ==  1) return RailChoice::curvedBottomRight;
-    // coming from right (inX=-1), going down (outY=-1) : top-right corner
-    if (inX == -1 && outY == -1) return RailChoice::curvedTopRight;
-    // coming from down (inY=+1), going right (outX=+1) : bottom-left corner
-    if (inY ==  1 && outX ==  1) return RailChoice::curvedBottomLeft;
-    // coming from down (inY=+1), going left (outX=-1) : bottom-right corner
-    if (inY ==  1 && outX == -1) return RailChoice::curvedBottomRight;
-    // coming from up (inY=-1), going right (outX=+1) : top-left corner
-    if (inY == -1 && outX ==  1) return RailChoice::curvedTopLeft;
-    // coming from up (inY=-1), going left (outX=-1) : top-right corner
-    if (inY == -1 && outX == -1) return RailChoice::curvedTopRight;
+    if (inX ==  1 && outY ==  1) return RailChoice::curvedTopRight;
+    if (inX ==  1 && outY == -1) return RailChoice::curvedBottomRight;
+    if (inX == -1 && outY ==  1) return RailChoice::curvedTopLeft;
+    if (inX == -1 && outY == -1) return RailChoice::curvedBottomLeft;
+    if (inY ==  1 && outX ==  1) return RailChoice::curvedTopRight;
+    if (inY ==  1 && outX == -1) return RailChoice::curvedTopLeft;
+    if (inY == -1 && outX ==  1) return RailChoice::curvedBottomRight;
+    if (inY == -1 && outX == -1) return RailChoice::curvedBottomLeft;
 
     return RailChoice::straightHoriz;
 }
@@ -110,24 +105,21 @@ void drawCircuit(GLBI_Engine& myEngine, Rail& rails)
         // identifying rail type
         RailChoice type = getRailType(current, previous, next);
 
-         // add this:
-        std::cout << "cell [" << current.x << "," << current.y << "] "
-                << "in=(" << (current.x-previous.x) << "," << (current.y-previous.y) << ") "
-                << "out=(" << (next.x-current.x) << "," << (next.y-current.y) << ") "
-                << "type=" << (int)type << std::endl;
         // drawing rail
-        if (type == RailChoice::straightHoriz || type == RailChoice::straightVert) // straight rail
+        if (type == RailChoice::straightHoriz || type == RailChoice::straightVert)
         {
-            float angle {0.0f}; // horizontal case
-
-            if (type == RailChoice::straightVert)
-            {
-                angle = M_PI / 2.0f; 
-            }
-            
             myEngine.mvMatrixStack.pushMatrix();
-            myEngine.mvMatrixStack.addTranslation(Vector3D(posX, posY, 0.0f));
-            myEngine.mvMatrixStack.addRotation(angle, Vector3D(0.0f, 0.0f, 1.0f));
+
+            if (type == RailChoice::straightHoriz)
+            {
+                myEngine.mvMatrixStack.addTranslation(Vector3D(posX + squareSize, posY, 0.0f));
+                myEngine.mvMatrixStack.addRotation(M_PI / 2.0f, Vector3D(0.0f, 0.0f, 1.0f));
+            }
+            else // straightVert
+            {
+                myEngine.mvMatrixStack.addTranslation(Vector3D(posX, posY, 0.0f));
+            }
+
             myEngine.updateMvMatrix();
             rails.drawStraightRails(myEngine);
             myEngine.mvMatrixStack.popMatrix();
