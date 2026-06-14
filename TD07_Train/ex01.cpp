@@ -57,6 +57,9 @@ void onKey(GLFWwindow* window, int key, int /*scancode*/, int action, int /*mods
 			case GLFW_KEY_L:
 				if (is_pressed) lightingEnabled = !lightingEnabled;
 				break;
+			case GLFW_KEY_N:
+				if (is_pressed) nightMode =!nightMode;
+				break;
 			// camera 
 			case GLFW_KEY_W :
 				cam_x += fx * CAM_SPEED;
@@ -173,7 +176,10 @@ int main(int argc, char** argv) // argc : nb of arguments, argv : arguments
 		double startTime = glfwGetTime();
 
 		/* Render begins here */
-		glClearColor(0.286, 0.29, 0.478,0.0f); // color of the background, currently  : light blue
+		if (nightMode)
+			glClearColor(0.05f, 0.05f, 0.15f, 0.0f);// dark blue
+		else
+			glClearColor(0.67f, 0.84f, 0.9f, 0.0f);//light blue
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // reinitializes scene 
 		glEnable(GL_DEPTH_TEST); // z-buffer activated (depth)

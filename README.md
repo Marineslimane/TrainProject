@@ -14,6 +14,8 @@ D=Droite
 Space=haut
 W=Bas
 ESC=quitte le programme
+L= activer la lumière
+N= swtich entre jour et nuit
 
 les *fleches directionnelles* servent à modifier l'angle de la caméra
 *(nb: Nous avons utilisé 'W' pour aller en bas car shift ou controle fonctionnait mais pas si on reste appuyer étrangement)*

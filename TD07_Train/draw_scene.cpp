@@ -15,6 +15,7 @@ float cam_z {5.0f};
 float cam_angle {90.0f};
 float cam_pitch {0.0f};
 bool lightingEnabled {true};
+bool nightMode {false};
 GLBI_Engine myEngine;
 GLBI_Set_Of_Points somePoints(3);
 Rail rails; // struct Rail for rails objects
@@ -97,15 +98,16 @@ void initScene(const std::string& jsonPath)
     //light
     myEngine.switchToPhongShading();
 
-    //Soleil directionnel
-    myEngine.setLightPosition({5.0f, -5.0f, 8.0f, 0.0f}, 0);
-    myEngine.setLightIntensity({0.5f, 0.4f, 0.1f}, 0);
+    //Light init
+    myEngine.setLightPosition({5.0f, -5.0f, 8.0f, 0.0f}, 0);//sun
+    myEngine.setLightIntensity({1.4f, 1.2f, 0.9f}, 0);
+    myEngine.addALight({trainPosX, trainPosY + 0.6f, 2.1f, 1.0f}, {0.0f, 0.0f, 0.0f});//train light
 
-    //Phare du train
-    myEngine.addALight({trainPosX, trainPosY + 0.6f, 2.1f, 1.0f}, {3.0f, 3.0f, 2.0f});
-    myEngine.setShininess(0.2f);
+    //fixe param
+    myEngine.setShininess(8.0f);
     myEngine.setSpecularColor({0.2f, 0.2f, 0.15f});
     myEngine.setAttenuationFactor({1.0f, 0.05f, 0.01f});
+
     myEngine.switchToFlatShading();
 
     // train
@@ -147,14 +149,23 @@ void drawScene()
 {
     glPointSize(10.0);
     somePoints.drawSet();
-    enableLighting();
-
     if (lightingEnabled) {
         myEngine.switchToPhongShading();
-        myEngine.setLightPosition(
-            {trainPosX, trainPosY + 0.6f, 2.1f, 1.0f}, // w=1 = ponctuelle
-            1 // lumière numéro 1
-        );
+        
+        if (nightMode) {
+            //day
+            myEngine.setLightPosition({0.0f, 0.0f, 100.0f, 0.0f}, 0);
+            myEngine.setLightIntensity({0.2f, 0.2f, 0.1f}, 0);//night
+            myEngine.setLightPosition({trainPosX, trainPosY + 0.6f, 2.1f, 1.0f}, 1);
+            myEngine.setLightIntensity({2.3f, 2.3f, 1.6f}, 1);//train light
+        } else {
+            //night
+            myEngine.setLightPosition({5.0f, -5.0f, 8.0f, 0.0f}, 0);
+            myEngine.setLightIntensity({1.4f, 1.2f, 0.9f}, 0);
+            myEngine.setLightPosition({trainPosX, trainPosY + 0.6f, 2.1f, 1.0f}, 1);
+            myEngine.setLightIntensity({0.2f, 0.2f, 0.1f}, 1);
+        }
+        
         myEngine.switchToFlatShading();
     }
 
