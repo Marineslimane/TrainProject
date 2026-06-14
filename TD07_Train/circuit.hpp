@@ -5,6 +5,9 @@
 
 #include "rails.hpp"
 #include "rail_types.hpp" // for RailChoice
+#include "kenny.hpp"
+#include "train.hpp"
+#include "train_station.hpp"
 
 struct RailCellCoord
 {
@@ -12,13 +15,17 @@ struct RailCellCoord
     int y;
 };
 
-struct CircuitData 
+struct JsonData 
 {
-    std::vector<RailCellCoord> cells;
-    int squareSize;
+    std::vector<RailCellCoord> cells; // coordinates of rails
+    // coordinates of other elements 
+    RailCellCoord kenny;
+    RailCellCoord train_station;
+    RailCellCoord train;
+    int squareSize; // size of a square of grid, by default it's 10
 };
 
-CircuitData loadCircuit(const std::string& path);
+JsonData loadCircuit(const std::string& path);
 
 void initCircuit(const std::string& path);
 
@@ -29,3 +36,5 @@ float curvedAngle(RailChoice type);
 
 
 void drawCircuit(GLBI_Engine& myEngine, Rail& rails);
+
+void drawElements(GLBI_Engine& myEngine, Rail& rails);

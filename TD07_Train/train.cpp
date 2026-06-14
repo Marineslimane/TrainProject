@@ -840,7 +840,7 @@ void drawTrain(GLBI_Engine& myEngine)
 void drawPositionnedTrain(GLBI_Engine& myEngine, float posX, float posY)
 {
     myEngine.mvMatrixStack.pushMatrix();
-    myEngine.mvMatrixStack.addTranslation(Vector3D(posX, posY, 0.0));
+    myEngine.mvMatrixStack.addTranslation(Vector3D(posX-5.0, posY, 0.0f));
     myEngine.updateMvMatrix();
 
     drawTrain(myEngine);

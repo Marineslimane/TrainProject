@@ -172,13 +172,14 @@ void drawScene()
     drawGrid();
     
     // draws objects
-    drawKenny(10.0f, 0.0f, 0.0f);
-    drawTrainStation(myEngine, -20.0, 10.0);
+    //drawKenny(10.0f, 0.0f, 0.0f);
+    //drawTrainStation(myEngine, -20.0, 10.0);
     // rails.drawStraightTrack(myEngine, 5, 0.0f, 0.0f, squareSize); // straight line
     // rails.drawPositionnedCurvedRails(myEngine, 0.5, 0.125, squareSize, -M_PI/2);
     drawCircuit(myEngine, rails);
+    drawElements(myEngine, rails);
     // draws train
-    drawPositionnedTrain(myEngine, trainPosX, trainPosY);
+    //drawPositionnedTrain(myEngine, trainPosX, trainPosY);
     // draws trainstation
     //drawTrainStation(myEngine, 60.0, 10.0);
 }

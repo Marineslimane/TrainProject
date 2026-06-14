@@ -18,7 +18,7 @@ void Rail::initCurvedRails()
 
     for (int i {0} ; i < nbTriangles ; i++)
     {
-        float angle {i*((((float)M_PI/2)+0.2)/nbTriangles)};
+        float angle {i*((float)((M_PI/2)+0.2)/nbTriangles)};
 
         // nb : no need to rotate triangles since TRIANGLE_STRIP automatically joins vertices
         // triangles along greatRadius
@@ -80,7 +80,7 @@ void Rail::initCurvedRails()
 
     for (int i {0} ; i < nbTriangles ; i++)
     {
-        float angle {i*((((float)M_PI/2)+0.2)/nbTriangles)};
+        float angle {i*((float)((M_PI/2)+0.2)/nbTriangles)};
 
         // nb : no need to rotate triangles since TRIANGLE_STRIP automatically joins vertices
         // triangles along greatRadius2

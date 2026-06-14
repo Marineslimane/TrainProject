@@ -1,9 +1,9 @@
 #include "json.hpp"
 #include "circuit.hpp"
 
-CircuitData circuit;
+JsonData world_data;
 
-CircuitData loadCircuit(const std::string& path) // stores data from json file in struct CircuitData
+JsonData loadJson(const std::string& path) // stores data from json file in struct JsonData
 {
     std::ifstream f(path);
 
@@ -11,7 +11,7 @@ CircuitData loadCircuit(const std::string& path) // stores data from json file i
     if (!f.is_open()) 
     {
         std::cerr << "Failed to open: " << path << std::endl;
-        return CircuitData{};
+        return JsonData{};
     }
     
     // read json as string
@@ -21,9 +21,15 @@ CircuitData loadCircuit(const std::string& path) // stores data from json file i
     try
     {
         nlohmann::json data = nlohmann::json::parse(content);
-        CircuitData result;
-        result.squareSize = data["size_grid"];
 
+        JsonData result;
+        // fetching simple values : 
+        result.squareSize = data["size_grid"];
+        result.train = RailCellCoord {data["train"][0], data["train"][1]};
+        result.kenny = RailCellCoord {data["kenny"][0], data["kenny"][1]};
+        result.train_station = RailCellCoord {data["train_station"][0], data["train_station"][1]};
+ 
+        // fetching coordinates of rails :
         for (auto& pos : data["path"]) // all positions where rails should be put 
         {
             result.cells.push_back({pos[0], pos[1]});
@@ -34,13 +40,13 @@ CircuitData loadCircuit(const std::string& path) // stores data from json file i
     catch (const std::exception& e) // if it didnt work
     {
         std::cerr << "JSON error: " << e.what() << std::endl;
-        return CircuitData{};
+        return JsonData{};
     }
 }
 
 void initCircuit(const std::string& path)
 {
-    circuit = loadCircuit(path);
+    world_data = loadJson(path);
 }
 
 RailChoice getRailType(RailCellCoord pos, RailCellCoord previous, RailCellCoord next)
@@ -87,8 +93,8 @@ float curvedAngle(RailChoice type)
 
 void drawCircuit(GLBI_Engine& myEngine, Rail& rails)
 {
-    std::vector<RailCellCoord> cells {circuit.cells};
-    int squareSize {circuit.squareSize};
+    std::vector<RailCellCoord> cells {world_data.cells};
+    int squareSize {world_data.squareSize};
     int n {(int)cells.size()};
 
     for (int i {0}; i < n; i++) 
@@ -130,4 +136,31 @@ void drawCircuit(GLBI_Engine& myEngine, Rail& rails)
             rails.drawPositionnedCurvedRails(myEngine, posX, posY, type, squareSize);
         }
     }
+}
+
+void drawElements(GLBI_Engine& myEngine, Rail& rails)
+{
+    RailCellCoord kenny {world_data.kenny};
+    RailCellCoord train {world_data.train};
+    RailCellCoord train_station {world_data.train_station};
+
+    // drawing all elements at coordinates indicated in json file
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.updateMvMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(0.0, 0.0, rails.sr+rails.rr));
+    drawPositionnedTrain(myEngine, train.x*world_data.squareSize, train.y*world_data.squareSize);
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.updateMvMatrix();
+    drawKenny(kenny.x*world_data.squareSize, kenny.y*world_data.squareSize, 0.0f);
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.updateMvMatrix();
+    drawTrainStation(myEngine, train_station.x*world_data.squareSize, train_station.y*world_data.squareSize);
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
 }
