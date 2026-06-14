@@ -19,6 +19,7 @@ bool nightMode {false};
 GLBI_Engine myEngine;
 GLBI_Set_Of_Points somePoints(3);
 Rail rails; // struct Rail for rails objects
+extern JsonData world_data;
 
 // Grid parameters
 const float squareSize {10}; // size of each square of the grid
@@ -149,20 +150,29 @@ void drawScene()
 {
     glPointSize(10.0);
     somePoints.drawSet();
-    if (lightingEnabled) {
+
+    // coordinates of train
+    float trainWorldX = world_data.train.x * world_data.squareSize;
+    float trainWorldY = world_data.train.y * world_data.squareSize;
+
+    if (lightingEnabled)
+    {
         myEngine.switchToPhongShading();
         
-        if (nightMode) {
+        if (nightMode)
+        {
             //day
             myEngine.setLightPosition({0.0f, 0.0f, 100.0f, 0.0f}, 0);
             myEngine.setLightIntensity({0.2f, 0.2f, 0.1f}, 0);//night
-            myEngine.setLightPosition({trainPosX, trainPosY + 0.6f, 2.1f, 1.0f}, 1);
+            myEngine.setLightPosition({trainWorldX-5, trainWorldY + 0.6f, 2.1f, 1.0f}, 1);
             myEngine.setLightIntensity({2.3f, 2.3f, 1.6f}, 1);//train light
-        } else {
+        }
+        else
+        {
             //night
             myEngine.setLightPosition({5.0f, -5.0f, 8.0f, 0.0f}, 0);
             myEngine.setLightIntensity({1.4f, 1.2f, 0.9f}, 0);
-            myEngine.setLightPosition({trainPosX, trainPosY + 0.6f, 2.1f, 1.0f}, 1);
+            myEngine.setLightPosition({trainWorldX-5, trainWorldY + 0.6f, 2.1f, 1.0f}, 1);
             myEngine.setLightIntensity({0.2f, 0.2f, 0.1f}, 1);
         }
         
