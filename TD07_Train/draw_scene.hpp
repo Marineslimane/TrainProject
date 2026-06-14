@@ -21,6 +21,7 @@ extern float cam_angle;
 extern bool lightingEnabled;
 extern float cam_pitch;
 extern float trainPosX, trainPosY;
+extern bool nightMode;
 /* OpenGL Engine */
 extern GLBI_Engine myEngine;
 extern STP3D::StandardMesh* groundMesh;
