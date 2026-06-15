@@ -26,6 +26,7 @@ JsonData loadJson(const std::string& path) // stores data from json file in stru
         // fetching simple values : 
         result.squareSize = data["size_grid"];
         result.train = RailCellCoord {data["train"][0], data["train"][1]};
+        result.light = RailCellCoord {data["light"][0], data["light"][1]};
         result.kenny = RailCellCoord {data["kenny"][0], data["kenny"][1]};
         result.train_station = RailCellCoord {data["train_station"][0], data["train_station"][1]};
  
@@ -142,6 +143,7 @@ void drawElements(GLBI_Engine& myEngine, Rail& rails)
 {
     RailCellCoord kenny {world_data.kenny};
     RailCellCoord train {world_data.train};
+    RailCellCoord light {world_data.light};
     RailCellCoord train_station {world_data.train_station};
 
     // drawing all elements at coordinates indicated in json file
@@ -163,4 +165,11 @@ void drawElements(GLBI_Engine& myEngine, Rail& rails)
     drawTrainStation(myEngine, train_station.x*world_data.squareSize, train_station.y*world_data.squareSize);
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
+
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.updateMvMatrix();
+    drawLampadaire(myEngine, light.x*world_data.squareSize, light.y*world_data.squareSize);
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+
 }

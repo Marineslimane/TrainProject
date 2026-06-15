@@ -8,6 +8,7 @@
 #include "kenny.hpp"
 #include "train.hpp"
 #include "train_station.hpp"
+#include "lamp.hpp"
 
 struct RailCellCoord
 {
@@ -22,6 +23,7 @@ struct JsonData
     RailCellCoord kenny;
     RailCellCoord train_station;
     RailCellCoord train;
+    RailCellCoord light;
     int squareSize; // size of a square of grid, by default it's 10
 };
 

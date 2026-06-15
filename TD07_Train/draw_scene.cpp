@@ -5,6 +5,7 @@
 #include "train.hpp"
 #include "kenny.hpp"
 #include "tree.hpp"
+#include "lamp.hpp"
 #define STB_IMAGE_IMPLEMENTATION
 #include "tools/stb_image.h"
 #include "circuit.hpp"
@@ -72,6 +73,7 @@ void initScene(const std::string& jsonPath)
     initTrainStation();
     initKenny();
     initTree();
+    initLampadaire();
     initBush();
     initFace();
     initEyebrow();
@@ -106,6 +108,7 @@ void initScene(const std::string& jsonPath)
     myEngine.setLightPosition({5.0f, -5.0f, 8.0f, 0.0f}, 0);//sun
     myEngine.setLightIntensity({1.4f, 1.2f, 0.9f}, 0);
     myEngine.addALight({trainPosX, trainPosY + 0.6f, 2.1f, 1.0f}, {0.0f, 0.0f, 0.0f});//train light
+    myEngine.addALight({0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 0.0f});
 
     //fixe param
     myEngine.setShininess(8.0f);
@@ -157,26 +160,35 @@ void drawScene()
     // coordinates of train
     float trainWorldX = world_data.train.x * world_data.squareSize;
     float trainWorldY = world_data.train.y * world_data.squareSize;
-
+    float lightWorldX = world_data.light.x * world_data.squareSize;
+    float lightWorldY = world_data.light.y * world_data.squareSize;
     if (lightingEnabled)
     {
         myEngine.switchToPhongShading();
         
         if (nightMode)
         {
-            //day
-            myEngine.setLightPosition({0.0f, 0.0f, 100.0f, 0.0f}, 0);
-            myEngine.setLightIntensity({0.2f, 0.2f, 0.1f}, 0);//night
-            myEngine.setLightPosition({trainWorldX-5, trainWorldY + 0.6f, 2.1f, 1.0f}, 1);
-            myEngine.setLightIntensity({2.3f, 2.3f, 1.6f}, 1);//train light
+        //night
+        myEngine.setLightPosition({0.0f, 0.0f, 100.0f, 0.0f}, 0);
+        myEngine.setLightIntensity({0.2f, 0.2f, 0.1f}, 0);
+
+        myEngine.setLightPosition({trainWorldX-5, trainWorldY + 0.6f, 2.1f, 1.0f}, 1);
+        myEngine.setLightIntensity({2.3f, 2.3f, 1.6f}, 1);//train light
+
+        myEngine.setLightPosition({lightWorldX, lightWorldY, 14.5f, 1.0f}, 2);
+        myEngine.setLightIntensity({3.5f, 3.2f, 2.0f}, 2);
         }
         else
         {
-            //night
-            myEngine.setLightPosition({5.0f, -5.0f, 8.0f, 0.0f}, 0);
-            myEngine.setLightIntensity({1.4f, 1.2f, 0.9f}, 0);
-            myEngine.setLightPosition({trainWorldX-5, trainWorldY + 0.6f, 2.1f, 1.0f}, 1);
-            myEngine.setLightIntensity({0.2f, 0.2f, 0.1f}, 1);
+        //day
+        myEngine.setLightPosition({5.0f, -5.0f, 8.0f, 0.0f}, 0);
+        myEngine.setLightIntensity({1.4f, 1.2f, 0.9f}, 0);
+
+        myEngine.setLightPosition({trainWorldX, trainWorldY + 0.6f, 2.1f, 1.0f}, 1);
+        myEngine.setLightIntensity({0.2f, 0.2f, 0.1f}, 1);
+
+        myEngine.setLightPosition({lightWorldX, lightWorldY, 14.5f, 1.0f}, 2);
+        myEngine.setLightIntensity({0.0f, 0.0f, 0.0f}, 2);  
         }
         
         myEngine.switchToFlatShading();

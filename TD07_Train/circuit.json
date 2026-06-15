@@ -25,5 +25,6 @@
     ],
     "kenny" : [0,0],
     "train" : [6,3],
-    "train_station" : [-1,4]
+    "train_station" : [-1,4],
+    "light" : [2,3]
 }
