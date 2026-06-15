@@ -4,6 +4,7 @@
 #include "rails.hpp"
 #include "train.hpp"
 #include "kenny.hpp"
+#include "tree.hpp"
 #define STB_IMAGE_IMPLEMENTATION
 #include "tools/stb_image.h"
 #include "circuit.hpp"
@@ -70,6 +71,8 @@ void initScene(const std::string& jsonPath)
     rails.initCurvedRails();
     initTrainStation();
     initKenny();
+    initTree();
+    initBush();
     initFace();
     initEyebrow();
     initMouth();
@@ -180,7 +183,22 @@ void drawScene()
     }
 
     drawGrid();
-    
+    srand(12);
+        for (int i = 0; i < 15; i++)
+        {
+            float x = (rand() % 190) - 95.0f;
+            float y = (rand() % 190) - 95.0f;
+        if (x > -25 && x < 45 && y > -10 && y < 45) { i--; continue; }
+            drawTree(myEngine, x, y);
+        }
+    srand(14);
+        for (int i = 0; i < 9; i++)
+        {
+            float x = (rand() % 190) - 95.0f;
+            float y = (rand() % 190) - 95.0f;
+        if (x > -25 && x < 45 && y > -10 && y < 45) { i--; continue; }
+            drawBush(myEngine, x, y);
+        }
     // draws objects
     //drawKenny(10.0f, 0.0f, 0.0f);
     //drawTrainStation(myEngine, -20.0, 10.0);
