@@ -156,16 +156,20 @@ void drawElements(GLBI_Engine& myEngine, Rail& rails)
 
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.updateMvMatrix();
-    drawKenny(kenny.x*world_data.squareSize, kenny.y*world_data.squareSize, 0.0f);
+    myEngine.mvMatrixStack.addHomothety(Vector3D(0.4, 0.4, 0.4));
+    myEngine.mvMatrixStack.addTranslation(Vector3D(25.0, 15.0, 0.0));
+    myEngine.mvMatrixStack.addRotation(M_PI/2, Vector3D(0.0, 0.0, 1.0));
+    drawKenny(kenny.x*world_data.squareSize, kenny.y*world_data.squareSize, -1.0f);
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.updateMvMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(35.0, 25.0, 0.0));
+    myEngine.mvMatrixStack.addRotation(M_PI/2, Vector3D(0.0, 0.0, 1.0));
     drawTrainStation(myEngine, train_station.x*world_data.squareSize, train_station.y*world_data.squareSize);
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
-
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.updateMvMatrix();
     drawLampadaire(myEngine, light.x*world_data.squareSize, light.y*world_data.squareSize);
