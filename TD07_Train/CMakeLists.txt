@@ -1,5 +1,9 @@
-file(GLOB HEADER_FILES .hpp)
-file(GLOB EXT_SRC_FILES "*.cpp")
+# now recursing over files so it can read files in subdirectories
+file(GLOB_RECURSE HEADER_FILES "*.hpp")
+file(GLOB_RECURSE EXT_SRC_FILES "*.cpp")
+# Exclude build directory
+list(FILTER EXT_SRC_FILES EXCLUDE REGEX "${CMAKE_CURRENT_SOURCE_DIR}/build/.*")
+list(FILTER EXT_SRC_FILES EXCLUDE REGEX "${CMAKE_CURRENT_SOURCE_DIR}/TD07_Train/build/.*")
 list(REMOVE_ITEM EXT_SRC_FILES ${EXE_SRC_FILES})
 file(GLOB EXE_SRC_FILES ex*.cpp)
 #file(GLOB_RECURSE SHADER_FILES.glsl)
@@ -13,6 +17,11 @@ foreach(EXE_SRC_FILE ${EXE_SRC_FILES})
     set(SRC_FILES ${EXT_SRC_FILES} ${EXE_SRC_FILE})
     add_executable(${OUTPUT} ${SRC_FILES} ${HEADER_FILES})
     target_link_libraries(${OUTPUT} ${ALL_LIBRARIES})
+
+    # so that include can be done from the root even in subdirectories : 
+    target_include_directories(${OUTPUT} PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}
+    )
 
     set_target_properties(${OUTPUT} PROPERTIES
         CXX_STANDARD 17

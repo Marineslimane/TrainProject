@@ -173,8 +173,10 @@ void Rail::drawStraightRails(GLBI_Engine& myEngine)
 
     float start = sr + rr;
     float end = 10.0f - sr - rr;
-    float gap = (end - start) / 4.0f; // test
-    for (int i = 0; i < 5; i++) { 
+    float gap = (end - start) / 4.0f;
+    
+    for (int i = 0; i < 5; i++) 
+    { 
         float posY = start + i * gap;
         drawBalast(myEngine, posY);
     }

@@ -1,16 +1,19 @@
 #include "draw_scene.hpp"
 #include "tools/basic_mesh.hpp"
-#include "train_station.hpp"
-#include "rails.hpp"
-#include "train.hpp"
-#include "kenny.hpp"
-#include "tree.hpp"
-#include "lamp.hpp"
+// models :
+#include "models/train_station/train_station.hpp"
+#include "rails/rails.hpp"
+#include "models/train/train.hpp"
+#include "models/kenny/kenny.hpp"
+#include "models/tree/tree.hpp"
+#include "models/lamp/lamp.hpp"
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "tools/stb_image.h"
-#include "circuit.hpp"
 
-/// Camera parameters
+#include "circuit/circuit.hpp"
+
+// Camera parameters
 float cam_x {0.0f};
 float cam_y {-20.0f};
 float cam_z {5.0f};
@@ -21,11 +24,11 @@ bool nightMode {false};
 GLBI_Engine myEngine;
 GLBI_Set_Of_Points somePoints(3);
 Rail rails; // struct Rail for rails objects
-extern JsonData world_data;
+extern JsonData world_data; // all data contained in json file
 
 // Grid parameters
 const float squareSize {10}; // size of each square of the grid
-const int N {40}; // size of grid (grid itself is a square)
+const int N {20}; // size of grid (grid itself is a square)
 
 STP3D::StandardMesh* groundMesh = nullptr; 
 STP3D::IndexedMesh* meshCube = nullptr;
@@ -34,12 +37,11 @@ STP3D::StandardMesh* meshCone = nullptr;
 
 GLBI_Texture grassTexture;
 
-//position train 
-float trainPosX {25.0f};
-float trainPosY {20.0f};
-// Rail parameters
-const float posY {5.0};
+// lamp light coordinates
+float lightPosX {25.0f};
+float lightPosY {20.0f};
 
+// light functions
 void enableLighting() 
 {
     if (lightingEnabled) myEngine.switchToPhongShading();
@@ -55,7 +57,7 @@ void initScene(const std::string& jsonPath)
     std::vector<float> points {0.0, 0.0, 0.0};
     somePoints.initSet(points, 1.0, 1.0, 1.0);
  
-    //meshs
+    // meshes
     groundMesh = STP3D::basicRect(squareSize, squareSize);
     groundMesh->createVAO();
  
@@ -68,17 +70,27 @@ void initScene(const std::string& jsonPath)
     meshCone = STP3D::basicCone(1.0f, 1.0f);
     meshCone->createVAO();
  
+    // MODELS INIT
+    // rails
     rails.initStraightRails();  
     rails.initCurvedRails();
+    // others
     initTrainStation();
     initKenny();
     initTree();
-    initLampadaire();
+    initStreetlight();
     initBush();
+    // train
+    initTrain();
     initFace();
     initEyebrow();
     initMouth();
+    // train station
+    initTrainStation();
+    // json init
+    initCircuit(jsonPath);
  
+    // textures
     grassTexture.createTexture();
     int gw, gh, gn;
     stbi_set_flip_vertically_on_load(true);
@@ -86,7 +98,7 @@ void initScene(const std::string& jsonPath)
 
     if (grassPixels == nullptr)
     {
-        std::cerr << "Erreur texture herbe" << std::endl;
+        std::cerr << "Grass texture failed" << std::endl;
     } 
     else 
     {
@@ -98,36 +110,30 @@ void initScene(const std::string& jsonPath)
         grassTexture.setParameters(GL_TEXTURE_WRAP_T, GL_REPEAT);
         grassTexture.detachTexture();
         stbi_image_free(grassPixels);
-        std::cerr << "Texture herbe OK" << std::endl;
+
+        std::cerr << "Grass texture worked" << std::endl;
     }
     
-    //light
+    // LIGHTS
     myEngine.switchToPhongShading();
 
-    //Light init
-    myEngine.setLightPosition({5.0f, -5.0f, 8.0f, 0.0f}, 0);//sun
+    // light init
+    myEngine.setLightPosition({5.0f, -5.0f, 8.0f, 0.0f}, 0); //sun
     myEngine.setLightIntensity({1.4f, 1.2f, 0.9f}, 0);
-    myEngine.addALight({trainPosX, trainPosY + 0.6f, 2.1f, 1.0f}, {0.0f, 0.0f, 0.0f});//train light
+    myEngine.addALight({lightPosX, lightPosY + 0.6f, 2.1f, 1.0f}, {0.0f, 0.0f, 0.0f}); // lamp light
     myEngine.addALight({0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 0.0f});
 
-    //fixe param
+    // fixed parameters :
     myEngine.setShininess(8.0f);
     myEngine.setSpecularColor({0.2f, 0.2f, 0.15f});
     myEngine.setAttenuationFactor({1.0f, 0.05f, 0.01f});
 
     myEngine.switchToFlatShading();
-
-    // train
-    initTrain();
-    // train station
-    initTrainStation();
-    // json
-    initCircuit(jsonPath);
 }
 
 void drawGrid()
 {
-
+    // light and texture 
     if (lightingEnabled) myEngine.switchToPhongShading();
     myEngine.activateTexturing(true);
     grassTexture.attachTexture();
@@ -158,43 +164,48 @@ void drawScene()
     somePoints.drawSet();
 
     // coordinates of train
-    float trainWorldX = world_data.train.x * world_data.squareSize;
-    float trainWorldY = world_data.train.y * world_data.squareSize;
+    float trainPosX = world_data.train.x * world_data.squareSize;
+    float trainPosY = world_data.train.y * world_data.squareSize;
+    // coordinates of light
     float lightWorldX = world_data.light.x * world_data.squareSize;
     float lightWorldY = world_data.light.y * world_data.squareSize;
+
     if (lightingEnabled)
     {
         myEngine.switchToPhongShading();
         
         if (nightMode)
         {
-        //night
-        myEngine.setLightPosition({0.0f, 0.0f, 100.0f, 0.0f}, 0);
-        myEngine.setLightIntensity({0.2f, 0.2f, 0.1f}, 0);
+            //night
+            myEngine.setLightPosition({0.0f, 0.0f, 100.0f, 0.0f}, 0);
+            myEngine.setLightIntensity({0.2f, 0.2f, 0.1f}, 0);
 
-        myEngine.setLightPosition({trainWorldX-5, trainWorldY + 0.6f, 2.1f, 1.0f}, 1);
-        myEngine.setLightIntensity({2.3f, 2.3f, 1.6f}, 1);//train light
+            // train light
+            myEngine.setLightPosition({trainPosX-5, trainPosY + 0.6f, 2.1f, 1.0f}, 1);
+            myEngine.setLightIntensity({2.3f, 2.3f, 1.6f}, 1);
 
-        myEngine.setLightPosition({lightWorldX, lightWorldY, 14.5f, 1.0f}, 2);
-        myEngine.setLightIntensity({3.5f, 3.2f, 2.0f}, 2);
+            myEngine.setLightPosition({lightWorldX, lightWorldY, 14.5f, 1.0f}, 2);
+            myEngine.setLightIntensity({3.5f, 3.2f, 2.0f}, 2);
         }
         else
         {
-        //day
-        myEngine.setLightPosition({5.0f, -5.0f, 8.0f, 0.0f}, 0);
-        myEngine.setLightIntensity({1.4f, 1.2f, 0.9f}, 0);
+            //day
+            myEngine.setLightPosition({5.0f, -5.0f, 8.0f, 0.0f}, 0);
+            myEngine.setLightIntensity({1.4f, 1.2f, 0.9f}, 0);
 
-        myEngine.setLightPosition({trainWorldX, trainWorldY + 0.6f, 2.1f, 1.0f}, 1);
-        myEngine.setLightIntensity({0.2f, 0.2f, 0.1f}, 1);
+            // train light
+            myEngine.setLightPosition({trainPosX, trainPosY + 0.6f, 2.1f, 1.0f}, 1);
+            myEngine.setLightIntensity({0.2f, 0.2f, 0.1f}, 1);
 
-        myEngine.setLightPosition({lightWorldX, lightWorldY, 14.5f, 1.0f}, 2);
-        myEngine.setLightIntensity({0.0f, 0.0f, 0.0f}, 2);  
+            myEngine.setLightPosition({lightWorldX, lightWorldY, 14.5f, 1.0f}, 2);
+            myEngine.setLightIntensity({0.0f, 0.0f, 0.0f}, 2);  
         }
-        
         myEngine.switchToFlatShading();
     }
 
     drawGrid();
+
+    // trees and bushes
     srand(12);
         for (int i = 0; i < 15; i++)
         {
@@ -211,15 +222,8 @@ void drawScene()
         if (x > -25 && x < 45 && y > -10 && y < 45) { i--; continue; }
             drawBush(myEngine, x, y);
         }
-    // draws objects
-    //drawKenny(10.0f, 0.0f, 0.0f);
-    //drawTrainStation(myEngine, -20.0, 10.0);
-    // rails.drawStraightTrack(myEngine, 5, 0.0f, 0.0f, squareSize); // straight line
-    // rails.drawPositionnedCurvedRails(myEngine, 0.5, 0.125, squareSize, -M_PI/2);
+        
+    // draw objects
     drawCircuit(myEngine, rails);
     drawElements(myEngine, rails);
-    // draws train
-    //drawPositionnedTrain(myEngine, trainPosX, trainPosY);
-    // draws trainstation
-    //drawTrainStation(myEngine, 60.0, 10.0);
 }

@@ -1,6 +1,6 @@
 #include "tools/basic_mesh.hpp"
 #include "train.hpp"
-#include "draw_scene.hpp"   // ← ajouter
+#include "draw_scene.hpp"
 STP3D::IndexedMesh* meshSphere;
 STP3D::IndexedMesh* meshCylinder;
 STP3D::IndexedMesh* meshCube3=nullptr;
@@ -9,7 +9,7 @@ STP3D::StandardMesh* meshRect2 = nullptr;
 GLBI_Convex_2D_Shape eyebrow{3};
 GLBI_Convex_2D_Shape mouth{3};
 
-// colors :
+// colors
 float lightGrey {0.85};
 float darkGrey {0.8};
 float blue {0.8};
@@ -68,7 +68,6 @@ void initTrain()
 void drawMouth(GLBI_Engine& myEngine)
 {
     myEngine.mvMatrixStack.pushMatrix();
-    // myEngine.mvMatrixStack.addRotation(-M_PI/120, Vector3D(0.0, 0.1, 0.0));
     myEngine.mvMatrixStack.addTranslation(Vector3D(0.0, 4.5f, 6.0f));
     myEngine.mvMatrixStack.addHomothety(Vector3D(2.5, 3.0, 1.25));
     myEngine.updateMvMatrix();
@@ -79,7 +78,6 @@ void drawMouth(GLBI_Engine& myEngine)
 
     // shadow
     myEngine.mvMatrixStack.pushMatrix();
-    // myEngine.mvMatrixStack.addRotation(-M_PI/120, Vector3D(0.0, 0.1, 0.0));
     myEngine.mvMatrixStack.addTranslation(Vector3D(0.0, 4.7f, 5.7f));
     myEngine.mvMatrixStack.addHomothety(Vector3D(2.5, 3.0, 1.25));
     myEngine.updateMvMatrix();
@@ -91,7 +89,7 @@ void drawMouth(GLBI_Engine& myEngine)
 
 void drawEyebrow(GLBI_Engine& myEngine)
 {
-     if (lightingEnabled) myEngine.switchToPhongShading();
+    if (lightingEnabled) myEngine.switchToPhongShading();
     // left
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(-2.25f, 4.5f, 13.25f));
@@ -114,7 +112,6 @@ void drawEyebrow(GLBI_Engine& myEngine)
     eyebrow.drawShape();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
-
 }
 
 void drawFace(GLBI_Engine& myEngine)
@@ -236,7 +233,6 @@ void drawFace(GLBI_Engine& myEngine)
     // NOSE
     // base (round part)
     myEngine.mvMatrixStack.pushMatrix();
-    // myEngine.mvMatrixStack.addRotation(-M_PI/120, Vector3D(0.0, 0.1, 0.0));
     myEngine.mvMatrixStack.addTranslation(Vector3D(0.0, 3.9f, 9.0f));
     myEngine.mvMatrixStack.addHomothety(Vector3D(0.225, 0.25, 0.18));
     myEngine.updateMvMatrix();
@@ -255,7 +251,6 @@ void drawFace(GLBI_Engine& myEngine)
     myEngine.updateMvMatrix();
     // shadow
     myEngine.mvMatrixStack.pushMatrix();
-    // myEngine.mvMatrixStack.addRotation(-M_PI/120, Vector3D(0.0, 0.1, 0.0));
     myEngine.mvMatrixStack.addTranslation(Vector3D(0.0, 4.0f, 9.0f));
     myEngine.mvMatrixStack.addHomothety(Vector3D(0.25, 0.25, 0.2));
     myEngine.updateMvMatrix();
@@ -303,6 +298,19 @@ void drawFace(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
+    // other elements
+    // eyebrows
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.updateMvMatrix();   
+    drawEyebrow(myEngine);
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
+    // mouth
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.updateMvMatrix();   
+    drawMouth(myEngine);
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
 }
 
 void drawWheel(GLBI_Engine& myEngine, float posX, float posY)
@@ -364,7 +372,6 @@ void drawWheels(GLBI_Engine& myEngine, float posX, float posY)
         meshSphere->draw();
         myEngine.mvMatrixStack.popMatrix();
         myEngine.updateMvMatrix();
-        // rectangles inside
         // rectangles inside
         for (int j {0}; j < nb_rims; j++)
         {
@@ -432,7 +439,7 @@ void drawBody(GLBI_Engine& myEngine)
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
-    // red strips
+    // red stripes
     int nb_stripes {6};
 
     for (int i {} ; i < nb_stripes ; i++)
@@ -446,6 +453,7 @@ void drawBody(GLBI_Engine& myEngine)
         myEngine.mvMatrixStack.popMatrix();
         myEngine.updateMvMatrix();
     }
+
     // blue thingy that ressembles a tailpipe
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addRotation(M_PI/2, Vector3D(1.0, 0.0, 0.0));
@@ -793,7 +801,6 @@ void drawBodyBox(GLBI_Engine& myEngine)
     meshCube3->draw();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
-
 }
 
 void drawUpperBody(GLBI_Engine& myEngine) // draws everything but wheels
@@ -803,8 +810,6 @@ void drawUpperBody(GLBI_Engine& myEngine) // draws everything but wheels
     myEngine.mvMatrixStack.addTranslation(Vector3D(0.0, 0.0f, 0.8));
     myEngine.updateMvMatrix();
     drawFace(myEngine);
-    drawEyebrow(myEngine);
-    drawMouth(myEngine);
     drawBody(myEngine);
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();

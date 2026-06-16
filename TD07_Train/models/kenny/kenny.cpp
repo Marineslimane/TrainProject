@@ -1,12 +1,11 @@
 #include "kenny.hpp"
 
-//Couleurs
+// colors
 const float ORANGE_R {1.0f},  ORANGE_G {0.45f}, ORANGE_B {0.0f};
 const float BROWN_R  {0.45f}, BROWN_G  {0.3f},  BROWN_B  {0.15f};
 const float BEIGE_R  {0.9f},  BEIGE_G  {0.8f},  BEIGE_B  {0.65f};
 const float WHITE_R  {1.0f},  WHITE_G  {1.0f},  WHITE_B  {1.0f};
 const float BLACK_R  {0.05f}, BLACK_G  {0.05f}, BLACK_B  {0.05f};
-
 
 STP3D::IndexedMesh* kennyHead = nullptr;
 STP3D::IndexedMesh* kennyEye = nullptr;
@@ -32,30 +31,30 @@ void initKenny()
     kennyArmCyl->createVAO();
 }
 
-void drawSphere(STP3D::IndexedMesh* mesh, GLBI_Engine& eng, float x, float y, float z, float sx, float sy, float sz, float r, float g, float b)
+void drawSphere(STP3D::IndexedMesh* mesh, GLBI_Engine& myEngine, float x, float y, float z, float sx, float sy, float sz, float r, float g, float b)
 {
-    eng.mvMatrixStack.pushMatrix();
-    eng.mvMatrixStack.addTranslation(Vector3D(x, y, z));
-    eng.mvMatrixStack.addHomothety(Vector3D(sx, sy, sz));
-    eng.updateMvMatrix();
-    eng.setFlatColor(r, g, b);
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(x, y, z));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(sx, sy, sz));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(r, g, b);
     mesh->draw();
-    eng.mvMatrixStack.popMatrix();
-    eng.updateMvMatrix();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
 }
 
-void drawKenny(float posX, float posY, float posZ)
+void drawKenny(GLBI_Engine& myEngine, float posX, float posY, float posZ)
 {
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(posX, posY, posZ));
     myEngine.mvMatrixStack.addHomothety(0.5f);
     myEngine.updateMvMatrix();
 
-    //pieds
+    // feet
     drawSphere(kennySphere, myEngine, -2.0f, 0.0f, 2.2f, 3.5f, 3.0f, 1.0f, BLACK_R, BLACK_G, BLACK_B);
     drawSphere(kennySphere, myEngine,  2.0f, 0.0f, 2.2f, 3.5f, 3.0f, 1.0f, BLACK_R, BLACK_G, BLACK_B);
 
-    //corps
+    // body
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(0.0f, 0.0f, 2.75));
     myEngine.mvMatrixStack.addRotation(M_PI / 2.0f, Vector3D(1.0f, 0.0f, 0.0f));
@@ -65,7 +64,7 @@ void drawKenny(float posX, float posY, float posZ)
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
-    //bras gauche
+    // left arm
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(-3.0f, 0.0f, 10.0f));
     myEngine.mvMatrixStack.addRotation(-M_PI / 2.0f, Vector3D(1.0f, 0.0f, 0.0f));
@@ -76,7 +75,7 @@ void drawKenny(float posX, float posY, float posZ)
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
-    //bras droit
+    // right arm
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(3.0f, 0.0f, 10.0f));
     myEngine.mvMatrixStack.addRotation(-M_PI / 2.0f, Vector3D(1.0f, 0.0f, 0.0f));
@@ -88,24 +87,24 @@ void drawKenny(float posX, float posY, float posZ)
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
-    //mains
+    // hands
     drawSphere(kennySphere, myEngine, -4.75f, 0.0f, 5.5f, 1.5f, 1.5f, 1.5f, BROWN_R, BROWN_G, BROWN_B);
     drawSphere(kennySphere, myEngine,  4.75f, 0.0f, 5.5f, 1.5f, 1.5f, 1.5f, BROWN_R, BROWN_G, BROWN_B);
 
-    //tete
+    // head
     drawSphere(kennyHead, myEngine, 0.0f, 0.0f, 15.0f, 1.15f, 1.15f, 1.15f, ORANGE_R, ORANGE_G, ORANGE_B);
 
-    //capuche
+    // hoodie
     drawSphere(kennySphere, myEngine, 0.0f, -3.5f, 15.0f, 5.0f, 1.8f, 5.0f, BROWN_R, BROWN_G, BROWN_B);
 
-    //visage
+    // face
     drawSphere(kennySphere, myEngine, 0.0f, -4.5f, 15.0f, 3.5f, 2.0f, 3.5f, BEIGE_R, BEIGE_G, BEIGE_B);
 
-    //yeux
+    // eyes
     drawSphere(kennyEye, myEngine, -1.5f, -6.0f, 16.0f, 2.0f, 0.5f, 2.0f, WHITE_R, WHITE_G, WHITE_B);
     drawSphere(kennyEye, myEngine,  1.5f, -6.0f, 16.0f, 2.0f, 0.5f, 2.0f, WHITE_R, WHITE_G, WHITE_B);
 
-    //pupilles
+    // inside of eyes
     drawSphere(kennySphere, myEngine, -1.5f, -6.3f, 16.2f, 0.3f, 0.3f, 0.3f, BLACK_R, BLACK_G, BLACK_B);
     drawSphere(kennySphere, myEngine,  1.5f, -6.3f, 16.2f, 0.3f, 0.3f, 0.3f, BLACK_R, BLACK_G, BLACK_B);
 

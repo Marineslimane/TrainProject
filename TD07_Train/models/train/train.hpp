@@ -7,6 +7,7 @@
 
 using namespace glbasimac;
 
+// init functions
 void initFace();
 
 void initMouth();
@@ -17,6 +18,7 @@ void initWheel();
 
 void initTrain();
 
+// draw functions
 void drawMouth(GLBI_Engine& myEngine);
 
 void drawEyebrow(GLBI_Engine& myEngine);

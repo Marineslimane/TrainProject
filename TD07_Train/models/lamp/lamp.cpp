@@ -9,9 +9,8 @@ STP3D::IndexedMesh* lampBase = nullptr;
 STP3D::IndexedMesh* lampMat = nullptr;
 STP3D::IndexedMesh* lampLight = nullptr;
  
-void initLampadaire()
+void initStreetlight()
 {
-
     lampGround = STP3D::basicSphere(1.0f, 16, 8);
     lampGround->createVAO();
  
@@ -24,15 +23,15 @@ void initLampadaire()
     lampLight = STP3D::basicSphere(2.0f, 16, 12);
     lampLight->createVAO();
 }
-void initLampadaireLight(GLBI_Engine& myEngine, float posX, float posY, float posZ)
+
+void initStreetlightLight(GLBI_Engine& myEngine, float posX, float posY, float posZ)
 {
-   
     myEngine.addALight(
         {posX, posY, posZ + 9.0f, 1.0f}, 
         {LIGHT_R, LIGHT_G, LIGHT_B} 
     );
 }
-void drawLampadaire(GLBI_Engine& myEngine, float x, float y)
+void drawStreetlight(GLBI_Engine& myEngine, float x, float y)
 {
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(x, y, 0.0f));
@@ -46,7 +45,6 @@ void drawLampadaire(GLBI_Engine& myEngine, float x, float y)
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
  
-
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(0.0f, 0.0f, 0.9f));
     myEngine.mvMatrixStack.addHomothety(Vector3D(0.7f, 0.7f, 0.6f));
@@ -56,7 +54,6 @@ void drawLampadaire(GLBI_Engine& myEngine, float x, float y)
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
  
-
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(0.0f, 0.0f, 1.2f));
     myEngine.mvMatrixStack.addRotation(M_PI / 2.0f, Vector3D(1.0f, 0.0f, 0.0f));
@@ -66,7 +63,7 @@ void drawLampadaire(GLBI_Engine& myEngine, float x, float y)
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
  
-    //light
+    // light
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(0.0f, 0.0f, 9.0f));
     myEngine.mvMatrixStack.addHomothety(Vector3D(0.45f, 0.45f, 0.45f));

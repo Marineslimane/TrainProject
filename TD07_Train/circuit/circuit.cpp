@@ -58,12 +58,16 @@ RailChoice getRailType(RailCellCoord pos, RailCellCoord previous, RailCellCoord 
     int outY = next.y - pos.y;
 
     if (abs(inX) > 1 || abs(inY) > 1 || abs(outX) > 1 || abs(outY) > 1)
+    {
         return RailChoice::straightHoriz;
+    }
 
-    // straight
+    // straight rails
     if (inX == outX && inY == outY)
+    {
         return (inX != 0) ? RailChoice::straightHoriz : RailChoice::straightVert;
-
+    }
+    // curved rails
     if (inX ==  1 && outY ==  1) return RailChoice::curvedTopRight;
     if (inX ==  1 && outY == -1) return RailChoice::curvedBottomRight;
     if (inX == -1 && outY ==  1) return RailChoice::curvedTopLeft;
@@ -73,10 +77,10 @@ RailChoice getRailType(RailCellCoord pos, RailCellCoord previous, RailCellCoord 
     if (inY == -1 && outX ==  1) return RailChoice::curvedBottomRight;
     if (inY == -1 && outX == -1) return RailChoice::curvedBottomLeft;
 
-    return RailChoice::straightHoriz;
+    return RailChoice::straightHoriz; // default
 }
 
-float curvedAngle(RailChoice type)
+float curvedAngle(RailChoice type) // choice of the angle for curved rails
 {
     switch (type) 
     {
@@ -88,7 +92,8 @@ float curvedAngle(RailChoice type)
             return M_PI;
         case RailChoice::curvedBottomRight: 
             return -M_PI/2.0f;
-        default: return 0.0f;
+        default: 
+            return 0.0f;
     }
 }
 
@@ -149,31 +154,31 @@ void drawElements(GLBI_Engine& myEngine, Rail& rails)
     // drawing all elements at coordinates indicated in json file
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.updateMvMatrix();
-    myEngine.mvMatrixStack.addTranslation(Vector3D(0.0, 0.0, rails.sr+rails.rr));
-    drawPositionnedTrain(myEngine, train.x*world_data.squareSize, train.y*world_data.squareSize);
+    myEngine.mvMatrixStack.addTranslation(Vector3D(train.x*world_data.squareSize, train.y*world_data.squareSize, rails.sr+rails.rr));
+    drawPositionnedTrain(myEngine, 0.0f, 0.0f);
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.updateMvMatrix();
     myEngine.mvMatrixStack.addHomothety(Vector3D(0.4, 0.4, 0.4));
-    myEngine.mvMatrixStack.addTranslation(Vector3D(25.0, 15.0, 0.0));
+    myEngine.mvMatrixStack.addTranslation(Vector3D(kenny.x*world_data.squareSize, kenny.y*world_data.squareSize, -1.0f)); // moving the axis to the center of the model so we can rotate around the center of the model after
     myEngine.mvMatrixStack.addRotation(M_PI/2, Vector3D(0.0, 0.0, 1.0));
-    drawKenny(kenny.x*world_data.squareSize, kenny.y*world_data.squareSize, -1.0f);
+    drawKenny(myEngine, 0.0f, 0.0f, 0.0f);
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.updateMvMatrix();
-    myEngine.mvMatrixStack.addTranslation(Vector3D(35.0, 25.0, 0.0));
+    myEngine.mvMatrixStack.addTranslation(Vector3D(train_station.x*world_data.squareSize, train_station.y*world_data.squareSize, 0.0)); // same thing
     myEngine.mvMatrixStack.addRotation(M_PI/2, Vector3D(0.0, 0.0, 1.0));
-    drawTrainStation(myEngine, train_station.x*world_data.squareSize, train_station.y*world_data.squareSize);
-    myEngine.mvMatrixStack.popMatrix();
-    myEngine.updateMvMatrix();
-    myEngine.mvMatrixStack.pushMatrix();
-    myEngine.updateMvMatrix();
-    drawLampadaire(myEngine, light.x*world_data.squareSize, light.y*world_data.squareSize);
+    drawTrainStation(myEngine, 0.0f, 0.0f);
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.updateMvMatrix();
+    drawStreetlight(myEngine, light.x*world_data.squareSize, light.y*world_data.squareSize);
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.updateMvMatrix();
 }

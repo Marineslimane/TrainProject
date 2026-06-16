@@ -13,7 +13,7 @@ using namespace STP3D;
 /* Window properties */
 static const unsigned int WINDOW_WIDTH = 1200;
 static const unsigned int WINDOW_HEIGHT = 800;
-static const char WINDOW_TITLE[] = "Thomas the train";
+static const char WINDOW_TITLE[] = "THOMAS THE TRAIN !!";
 static float aspectRatio = 1.0f;
 
 /* Minimal time wanted between two images */
@@ -122,7 +122,7 @@ int main(int argc, char** argv) // argc : nb of arguments, argv : arguments
 	// JSON
     if (argc < 2) // if less than 2 parameters entered
 	{
-        std::cerr << "Usage: " << argv[0] << " <circuit.json>" << std::endl;
+        std::cerr << "Usage: " << argv[0] << " <circuit/circuit.json>" << std::endl;
     	return -1;
     }
 
@@ -179,7 +179,7 @@ int main(int argc, char** argv) // argc : nb of arguments, argv : arguments
 		if (nightMode)
 			glClearColor(0.05f, 0.05f, 0.15f, 0.0f);// dark blue
 		else
-			glClearColor(0.67f, 0.84f, 0.9f, 0.0f);//light blue
+			glClearColor(0.67f, 0.84f, 0.9f, 0.0f); // light blue
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // reinitializes scene 
 		glEnable(GL_DEPTH_TEST); // z-buffer activated (depth)

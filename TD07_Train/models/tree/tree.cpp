@@ -29,7 +29,7 @@ void drawTree(GLBI_Engine& myEngine, float x, float y)
     myEngine.mvMatrixStack.addHomothety(5.0f); 
     myEngine.updateMvMatrix();
 
-    //Trunk
+    // trunk
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addRotation(M_PI / 2.0f, Vector3D(1.0f, 0.0f, 0.0f));
     myEngine.mvMatrixStack.addHomothety(Vector3D(1.0f, 1.0f, 1.0f));
@@ -39,7 +39,7 @@ void drawTree(GLBI_Engine& myEngine, float x, float y)
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
-    //Leaf
+    // leaves
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(0.0f, 0.0f, 4.5f));
     myEngine.mvMatrixStack.addHomothety(2.0f);
@@ -49,7 +49,7 @@ void drawTree(GLBI_Engine& myEngine, float x, float y)
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
-    //LeftLeaf
+    // LeftLeaf
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(-1.2f, 0.0f, 3.8f));
     myEngine.mvMatrixStack.addHomothety(1.3f);
@@ -59,7 +59,7 @@ void drawTree(GLBI_Engine& myEngine, float x, float y)
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
-    //RightLeaf
+    // RightLeaf
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(1.2f, 0.0f, 3.8f));
     myEngine.mvMatrixStack.addHomothety(1.3f);
@@ -69,7 +69,7 @@ void drawTree(GLBI_Engine& myEngine, float x, float y)
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
-    //UpLeaf
+    // UpLeaf
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(0.0f, 0.0f, 6.0f));
     myEngine.mvMatrixStack.addHomothety(1.2f);
@@ -90,7 +90,7 @@ void drawBush(GLBI_Engine& myEngine, float x, float y)
     myEngine.mvMatrixStack.addHomothety(3.0f); 
     myEngine.updateMvMatrix();
 
-    //Leaf
+    // Leaf
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(0.0f, 0.0f, 0.0f));
     myEngine.mvMatrixStack.addHomothety(2.0f);
@@ -100,7 +100,7 @@ void drawBush(GLBI_Engine& myEngine, float x, float y)
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
-    //LeftLeaf
+    // LeftLeaf
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(-1.7f, 0.0f, 0.0f));
     myEngine.mvMatrixStack.addHomothety(1.3f);
@@ -110,7 +110,7 @@ void drawBush(GLBI_Engine& myEngine, float x, float y)
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
-    //fruits
+    // fruits
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(-1.9f, 0.0f, 1.0f));
     myEngine.mvMatrixStack.addHomothety(0.3f);
@@ -129,7 +129,7 @@ void drawBush(GLBI_Engine& myEngine, float x, float y)
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
-    //RightLeaf
+    // RightLeaf
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(1.2f, 0.0f, 0.0f));
     myEngine.mvMatrixStack.addHomothety(1.3f);
@@ -139,7 +139,7 @@ void drawBush(GLBI_Engine& myEngine, float x, float y)
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
 
-    //UpLeaf
+    // UpLeaf
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(0.0f, 0.0f, 1.0f));
     myEngine.mvMatrixStack.addHomothety(1.2f);
@@ -151,5 +151,4 @@ void drawBush(GLBI_Engine& myEngine, float x, float y)
 
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();
-
 }

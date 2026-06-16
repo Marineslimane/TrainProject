@@ -7,7 +7,6 @@
 
 using namespace glbasimac;
 
-void initTree();
-void initBush();
-void drawTree(GLBI_Engine& myEngine, float posX, float posY);
-void drawBush(GLBI_Engine& myEngine, float posX, float posY);
+void initKenny();
+
+void drawKenny(GLBI_Engine& myEngine, float posX, float posY, float posZ);

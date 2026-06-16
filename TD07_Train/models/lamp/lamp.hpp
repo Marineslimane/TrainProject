@@ -8,6 +8,8 @@
 
 using namespace glbasimac;
 
-void initLampadaire();
-void initLampadaireLight(GLBI_Engine& myEngine, float posX, float posY, float posZ);
-void drawLampadaire(GLBI_Engine& myEngine, float posX, float posY);
+void initStreetlight();
+
+void initStreetlightLight(GLBI_Engine& myEngine, float posX, float posY, float posZ);
+
+void drawStreetlight(GLBI_Engine& myEngine, float posX, float posY);

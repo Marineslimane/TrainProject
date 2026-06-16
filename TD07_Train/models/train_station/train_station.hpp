@@ -8,5 +8,7 @@
 using namespace glbasimac;
 
 void drawTrainStation(GLBI_Engine& myEngine, float posX, float posY);
+
 void drawBox(GLBI_Engine& myEngine, float cx, float cy, float cz, float sx, float sy, float sz, float r, float g, float b);
+
 void initTrainStation(); 

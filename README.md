@@ -1,8 +1,10 @@
 # Thomas le train !!
 
+# ATTENTION : LE MODE DE LANCEMENT DU PROGRAMME A ÉTÉ MODIFIÉ ET N'EST PAS LE MÊME QUE CELUI INDIQUÉ DANS LE RAPPORT : il faut juste rajouter "circuit/" devant "circuit.json", ceci est rappelé dans la catégorie suivante
+
 ## Lancement et controle du programme
 - se mettre dans TD07_Train
-- run le programme avec "../bin/TD07_Trainex01.exe" "circuit.json"
+- run le programme avec "../bin/TD07_Trainex01.exe" "circuit/circuit.json"
 - pour rebuild : cmake --build "C:/Users/marin/Documents/IMAC/TrainProject/build"
 
 ## Controle 
