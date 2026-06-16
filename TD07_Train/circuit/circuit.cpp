@@ -3,6 +3,11 @@
 
 JsonData world_data;
 
+// train moves parameters
+int trainCellIndex {0};
+float trainProgress {0.0f};
+float trainSpeed {0.03f};
+
 JsonData loadJson(const std::string& path) // stores data from json file in struct JsonData
 {
     std::ifstream f(path);
@@ -50,10 +55,25 @@ void initCircuit(const std::string& path)
     world_data = loadJson(path);
 }
 
-RailChoice getRailType(RailCellCoord pos, RailCellCoord previous, RailCellCoord next)
+void initTrainIndex()
 {
-    int inX  = pos.x - previous.x;
-    int inY  = pos.y - previous.y;
+    int n = world_data.cells.size();
+
+    for (int i = 0; i < n; i++)
+    {
+        if (world_data.cells[i].x == world_data.train.x &&
+            world_data.cells[i].y == world_data.train.y)
+        {
+            trainCellIndex = i;
+            break;
+        }
+    }
+}
+
+RailChoice getRailType(RailCellCoord pos, RailCellCoord previousious, RailCellCoord next)
+{
+    int inX  = pos.x - previousious.x;
+    int inY  = pos.y - previousious.y;
     int outX = next.x - pos.x;
     int outY = next.y - pos.y;
 
@@ -106,7 +126,7 @@ void drawCircuit(GLBI_Engine& myEngine, Rail& rails)
     for (int i {0}; i < n; i++) 
     {
         // making sure the circuit closes
-        RailCellCoord previous = cells[(i - 1 + n) % n];
+        RailCellCoord previousious = cells[(i - 1 + n) % n];
         RailCellCoord current = cells[i];
         RailCellCoord next = cells[(i + 1) % n];
 
@@ -115,7 +135,7 @@ void drawCircuit(GLBI_Engine& myEngine, Rail& rails)
         float posY = current.y * squareSize;
 
         // identifying rail type
-        RailChoice type = getRailType(current, previous, next);
+        RailChoice type = getRailType(current, previousious, next);
 
         // drawing rail
         if (type == RailChoice::straightHoriz || type == RailChoice::straightVert)
@@ -144,6 +164,47 @@ void drawCircuit(GLBI_Engine& myEngine, Rail& rails)
     }
 }
 
+// train following circuit 
+void trainProgression() // how the train moves between squares
+{
+    trainProgress += trainSpeed; // increasing its speed
+
+    if (trainProgress >= 1.0f) // moving to the next cell
+    {
+        trainProgress = 0; // reseting the progression
+        trainCellIndex = (trainCellIndex + 1) % world_data.cells.size(); // modulo for borders
+    }
+}
+
+void trainMoves(float& posX, float& posY, float& angle)
+{
+    int n {world_data.cells.size()};
+    int squareSize {world_data.squareSize};
+    
+    RailCellCoord previous {world_data.cells[(trainCellIndex - 1 + n) % n]};
+    RailCellCoord current {world_data.cells[trainCellIndex]};
+    RailCellCoord next {world_data.cells[(trainCellIndex + 1) % n]};
+
+    // calculating middles of previous;current segment and current;next segment (on x and y) and converting it to world coordinates
+    // we add half a squareSize so that the train is centered inside the square since rails are centered inside squares of grid
+    float fromX {(previous.x + current.x) / 2.0f * squareSize + squareSize / 2.0f};
+    float fromY {(previous.y + current.y) / 2.0f * squareSize + squareSize / 2.0f};
+    float toX {(current.x + next.x) / 2.0f * squareSize + squareSize / 2.0f};
+    float toY {(current.y + next.y) / 2.0f * squareSize + squareSize / 2.0f};
+
+    // direction of the train
+    float dirX {toX - fromX};
+    float dirY {toY - fromY};
+
+    // new position of the train with speed
+    posX = fromX + trainProgress * dirX;
+    posY = fromY + trainProgress * dirY;
+
+    // angle with x axis
+    angle = atan2(dirY, dirX) + M_PI/2 ; // y/x + 90 degrees so that its facing the correct way
+
+}
+
 void drawElements(GLBI_Engine& myEngine, Rail& rails)
 {
     RailCellCoord kenny {world_data.kenny};
@@ -151,10 +212,16 @@ void drawElements(GLBI_Engine& myEngine, Rail& rails)
     RailCellCoord light {world_data.light};
     RailCellCoord train_station {world_data.train_station};
 
+    float trainX, trainY, angle;
+    trainMoves(trainX, trainY, angle);
+
+
     // drawing all elements at coordinates indicated in json file
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.updateMvMatrix();
-    myEngine.mvMatrixStack.addTranslation(Vector3D(train.x*world_data.squareSize, train.y*world_data.squareSize, rails.sr+rails.rr));
+    //myEngine.mvMatrixStack.addTranslation(Vector3D(train.x*world_data.squareSize, train.y*world_data.squareSize, rails.sr+rails.rr));
+    myEngine.mvMatrixStack.addTranslation(Vector3D(trainX, trainY, rails.sr+rails.rr));
+    myEngine.mvMatrixStack.addRotation(angle, Vector3D(0.0f, 0.0f, 1.0f));
     drawPositionnedTrain(myEngine, 0.0f, 0.0f);
     myEngine.mvMatrixStack.popMatrix();
     myEngine.updateMvMatrix();

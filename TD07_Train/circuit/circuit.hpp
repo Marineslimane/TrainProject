@@ -40,3 +40,7 @@ float curvedAngle(RailChoice type);
 void drawCircuit(GLBI_Engine& myEngine, Rail& rails);
 
 void drawElements(GLBI_Engine& myEngine, Rail& rails);
+
+void trainProgression();
+
+void trainMoves(float& posX, float& posY, float& angle);

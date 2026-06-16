@@ -821,7 +821,7 @@ void drawTrain(GLBI_Engine& myEngine)
 {
     // rescaling entire train to fit one square of grid
     myEngine.mvMatrixStack.pushMatrix();
-    myEngine.mvMatrixStack.addHomothety(Vector3D(0.3, 0.3, 0.3));
+    myEngine.mvMatrixStack.addHomothety(Vector3D(0.2, 0.2, 0.2));
     myEngine.updateMvMatrix();
 
     myEngine.mvMatrixStack.pushMatrix();
@@ -845,7 +845,7 @@ void drawTrain(GLBI_Engine& myEngine)
 void drawPositionnedTrain(GLBI_Engine& myEngine, float posX, float posY)
 {
     myEngine.mvMatrixStack.pushMatrix();
-    myEngine.mvMatrixStack.addTranslation(Vector3D(posX-5.0, posY, 0.0f));
+    myEngine.mvMatrixStack.addTranslation(Vector3D(posX, posY, 0.0f));
     myEngine.updateMvMatrix();
 
     drawTrain(myEngine);

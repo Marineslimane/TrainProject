@@ -225,5 +225,6 @@ void drawScene()
         
     // draw objects
     drawCircuit(myEngine, rails);
+    trainProgression();
     drawElements(myEngine, rails);
 }
