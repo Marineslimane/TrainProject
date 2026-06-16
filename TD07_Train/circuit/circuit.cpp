@@ -4,9 +4,9 @@
 JsonData world_data;
 
 // train moves parameters
-int trainCellIndex {0};
-float trainProgress {0.0f};
-float trainSpeed {0.03f};
+int trainCellIndex {0}; // index of cells in json file
+float trainProgress {0.0f}; // 0.0 = just entered cell, 1.0 = moving to next cell
+float trainSpeed {0.03f}; // how much trainProgress is increased each step
 
 JsonData loadJson(const std::string& path) // stores data from json file in struct JsonData
 {
@@ -178,7 +178,7 @@ void trainProgression() // how the train moves between squares
 
 void trainMoves(float& posX, float& posY, float& angle)
 {
-    int n {world_data.cells.size()};
+    int n {(int)world_data.cells.size()};
     int squareSize {world_data.squareSize};
     
     RailCellCoord previous {world_data.cells[(trainCellIndex - 1 + n) % n]};

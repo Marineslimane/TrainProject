@@ -12,6 +12,7 @@
 #include "tools/stb_image.h"
 
 #include "circuit/circuit.hpp"
+#include "poisson_disk_sampling.hpp" // for bushes and trees generation
 
 // Camera parameters
 float cam_x {0.0f};
@@ -40,6 +41,11 @@ GLBI_Texture grassTexture;
 // lamp light coordinates
 float lightPosX {25.0f};
 float lightPosY {20.0f};
+
+// generation of trees and bushes
+PointsGenerationParameters params;
+std::vector<Vec2> vegetationPositions;
+std::vector<bool> isTree; // for the choice between generation of tree or bush
 
 // light functions
 void enableLighting() 
@@ -89,7 +95,17 @@ void initScene(const std::string& jsonPath)
     initTrainStation();
     // json init
     initCircuit(jsonPath);
- 
+    // vegetation
+    srand(12);
+    vegetationPositions = generate2DPositions(params);
+
+    isTree.resize(vegetationPositions.size());
+    // choices for generation of tree or bush :
+    for (int i {0} ; i < (int)vegetationPositions.size(); i++)
+    {
+        isTree[i] = (rand() % 2 == 0); // if it's 0 then it's a tree otherwise it's a bush
+    }
+
     // textures
     grassTexture.createTexture();
     int gw, gh, gn;
@@ -158,6 +174,7 @@ void drawGrid()
     grassTexture.detachTexture();
     myEngine.activateTexturing(false);
 }
+
 void drawScene() 
 {
     glPointSize(10.0);
@@ -205,24 +222,85 @@ void drawScene()
 
     drawGrid();
 
-    // trees and bushes
-    srand(12);
-        for (int i = 0; i < 15; i++)
+    // trees and bushes generation
+    // naive version :
+    // srand(12);
+    //     for (int i = 0; i < 15; i++)
+    //     {
+    //         float x = (rand() % 190) - 95.0f;
+    //         float y = (rand() % 190) - 95.0f;
+    //     if (x > -25 && x < 45 && y > -10 && y < 45) { i--; continue; }
+    //         drawTree(myEngine, x, y);
+    //     }
+    // srand(14);
+    //     for (int i = 0; i < 9; i++)
+    //     {
+    //         float x = (rand() % 190) - 95.0f;
+    //         float y = (rand() % 190) - 95.0f;
+    //     if (x > -25 && x < 45 && y > -10 && y < 45) { i--; continue; }
+    //         drawBush(myEngine, x, y);
+    //     }
+    // poisson disk sampling version :
+    int nb_trees {};
+    int nb_bushes {};
+    int world_size {(int)N*squareSize};
+    float border {N}; // for border cases : so that objects are not half outside of the map
+    float middle_size {(world_size-border)/2};
+
+    for (int i {0} ; i < (int)vegetationPositions.size(); i++)
+    {
+        Vec2& p = vegetationPositions[i]; // position
+
+        // the original algorithm we implemented for PROG-ALGO generates coordinates in [0;1] sso we need to scale it to our 3D world
+        float x {p.x * (world_size - border) - middle_size};
+        float y {p.y * (world_size - border) - middle_size};
+
+        // no trees or bushes on objects or circuit :
+        // helper lambda to check if a position is too close to a cell
+        auto nearCell = [&](float x, float y, int cellX, int cellY, float margin) 
         {
-            float x = (rand() % 190) - 95.0f;
-            float y = (rand() % 190) - 95.0f;
-        if (x > -25 && x < 45 && y > -10 && y < 45) { i--; continue; }
-            drawTree(myEngine, x, y);
-        }
-    srand(14);
-        for (int i = 0; i < 9; i++)
+            float wx {cellX * world_data.squareSize + world_data.squareSize / 2.0f};
+            float wy {cellY * world_data.squareSize + world_data.squareSize / 2.0f};
+            return x > wx - margin && x < wx + margin && y > wy - margin && y < wy + margin;
+        };
+
+        // check circuit path
+        bool onCircuit {false};
+
+        for (RailCellCoord& cell : world_data.cells)
         {
-            float x = (rand() % 190) - 95.0f;
-            float y = (rand() % 190) - 95.0f;
-        if (x > -25 && x < 45 && y > -10 && y < 45) { i--; continue; }
-            drawBush(myEngine, x, y);
+            if (nearCell(x, y, cell.x, cell.y, world_data.squareSize))
+            {
+                onCircuit = true;
+                break;
+            }
         }
-        
+
+        // check special objects
+        bool onObject {nearCell(x, y, world_data.kenny.x, world_data.kenny.y, world_data.squareSize * 1.5f) || nearCell(x, y, world_data.train_station.x, world_data.train_station.y, world_data.squareSize * 2.0f) || nearCell(x, y, world_data.light.x, world_data.light.y, world_data.squareSize * 1.5f)};
+
+        if (onCircuit || onObject) 
+        {
+            continue;
+        }
+
+        // else if it's not going to be drawn over anything :
+        if (isTree[i] && nb_trees < params.max_trees)
+        { 
+            drawTree(myEngine, x, y); 
+            nb_trees++; 
+        }
+        else if (!isTree[i] && nb_bushes < params.max_bushes)
+        { 
+            drawBush(myEngine, x, y); 
+            nb_bushes++; 
+        }
+        else 
+        {
+            break;
+        }
+    }
+
     // draw objects
     drawCircuit(myEngine, rails);
     trainProgression();
