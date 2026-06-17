@@ -180,43 +180,46 @@ void drawScene()
     glPointSize(10.0);
     somePoints.drawSet();
 
-    // coordinates of train
-    float trainPosX = world_data.train.x * world_data.squareSize;
-    float trainPosY = world_data.train.y * world_data.squareSize;
+
     // coordinates of light
-    float lightWorldX = world_data.light.x * world_data.squareSize;
-    float lightWorldY = world_data.light.y * world_data.squareSize;
+    float streetLightX = world_data.light.x * world_data.squareSize;
+    float streetLightY = world_data.light.y * world_data.squareSize;
 
     if (lightingEnabled)
     {
         myEngine.switchToPhongShading();
-        
+
+        float trainX, trainY, angle;
+        trainMoves(trainX, trainY, angle);
+
+
+        float trainLightGap {3.0f}; //train light in front of the train
+        float trainLightX {(float)(trainX + cos(angle - M_PI/2.0f) * trainLightGap)};
+        float trainLightY {(float)(trainY + sin(angle - M_PI/2.0f) * trainLightGap)};
+
         if (nightMode)
         {
-            //night
             myEngine.setLightPosition({0.0f, 0.0f, 100.0f, 0.0f}, 0);
             myEngine.setLightIntensity({0.2f, 0.2f, 0.1f}, 0);
 
-            // train light
-            myEngine.setLightPosition({trainPosX-5, trainPosY + 0.6f, 2.1f, 1.0f}, 1);
+            myEngine.setLightPosition({trainLightX, trainLightY, 2.1f, 1.0f}, 1);
             myEngine.setLightIntensity({2.3f, 2.3f, 1.6f}, 1);
 
-            myEngine.setLightPosition({lightWorldX, lightWorldY, 14.5f, 1.0f}, 2);
+            myEngine.setLightPosition({streetLightX, streetLightY, 14.5f, 1.0f}, 2);
             myEngine.setLightIntensity({3.5f, 3.2f, 2.0f}, 2);
         }
         else
         {
-            //day
             myEngine.setLightPosition({5.0f, -5.0f, 8.0f, 0.0f}, 0);
             myEngine.setLightIntensity({1.4f, 1.2f, 0.9f}, 0);
 
-            // train light
-            myEngine.setLightPosition({trainPosX, trainPosY + 0.6f, 2.1f, 1.0f}, 1);
+            myEngine.setLightPosition({trainLightX, trainLightY, 2.1f, 1.0f}, 1);
             myEngine.setLightIntensity({0.2f, 0.2f, 0.1f}, 1);
 
-            myEngine.setLightPosition({lightWorldX, lightWorldY, 14.5f, 1.0f}, 2);
-            myEngine.setLightIntensity({0.0f, 0.0f, 0.0f}, 2);  
+            myEngine.setLightPosition({streetLightX, streetLightY, 14.5f, 1.0f}, 2);
+            myEngine.setLightIntensity({0.0f, 0.0f, 0.0f}, 2);
         }
+
         myEngine.switchToFlatShading();
     }
 
