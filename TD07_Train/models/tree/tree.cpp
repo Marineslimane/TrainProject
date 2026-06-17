@@ -1,7 +1,6 @@
 #include "tree.hpp"
 
 const float BROWN_R  {0.45f}, BROWN_G  {0.3f},  BROWN_B  {0.15f};
-const float GREEN_R {0.2f}, GREEN_G {0.55f}, GREEN_B {0.15f};
 
 STP3D::IndexedMesh* treeCyl = nullptr;
 STP3D::IndexedMesh* treeSphere = nullptr;

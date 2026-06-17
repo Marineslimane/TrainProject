@@ -20,8 +20,7 @@ JsonData loadJson(const std::string& path) // stores data from json file in stru
     }
     
     // read json as string
-    std::string content((std::istreambuf_iterator<char>(f)),
-                         std::istreambuf_iterator<char>());
+    std::string content((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
     
     try
     {
@@ -61,8 +60,7 @@ void initTrainIndex()
 
     for (int i = 0; i < n; i++)
     {
-        if (world_data.cells[i].x == world_data.train.x &&
-            world_data.cells[i].y == world_data.train.y)
+        if (world_data.cells[i].x == world_data.train.x && world_data.cells[i].y == world_data.train.y)
         {
             trainCellIndex = i;
             break;
@@ -72,8 +70,8 @@ void initTrainIndex()
 
 RailChoice getRailType(RailCellCoord pos, RailCellCoord previousious, RailCellCoord next)
 {
-    int inX  = pos.x - previousious.x;
-    int inY  = pos.y - previousious.y;
+    int inX = pos.x - previousious.x;
+    int inY = pos.y - previousious.y;
     int outX = next.x - pos.x;
     int outY = next.y - pos.y;
 
@@ -88,13 +86,13 @@ RailChoice getRailType(RailCellCoord pos, RailCellCoord previousious, RailCellCo
         return (inX != 0) ? RailChoice::straightHoriz : RailChoice::straightVert;
     }
     // curved rails
-    if (inX ==  1 && outY ==  1) return RailChoice::curvedTopRight;
-    if (inX ==  1 && outY == -1) return RailChoice::curvedBottomRight;
-    if (inX == -1 && outY ==  1) return RailChoice::curvedTopLeft;
+    if (inX == 1 && outY == 1) return RailChoice::curvedTopRight;
+    if (inX == 1 && outY == -1) return RailChoice::curvedBottomRight;
+    if (inX == -1 && outY == 1) return RailChoice::curvedTopLeft;
     if (inX == -1 && outY == -1) return RailChoice::curvedBottomLeft;
-    if (inY ==  1 && outX ==  1) return RailChoice::curvedTopRight;
-    if (inY ==  1 && outX == -1) return RailChoice::curvedTopLeft;
-    if (inY == -1 && outX ==  1) return RailChoice::curvedBottomRight;
+    if (inY == 1 && outX == 1) return RailChoice::curvedTopRight;
+    if (inY == 1 && outX == -1) return RailChoice::curvedTopLeft;
+    if (inY == -1 && outX == 1) return RailChoice::curvedBottomRight;
     if (inY == -1 && outX == -1) return RailChoice::curvedBottomLeft;
 
     return RailChoice::straightHoriz; // default
