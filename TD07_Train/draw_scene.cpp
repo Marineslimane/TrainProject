@@ -28,7 +28,7 @@ Rail rails; // struct Rail for rails objects
 extern JsonData world_data; // all data contained in json file
 
 // Grid parameters
-const float squareSize {10}; // size of each square of the grid
+float squareSize {10}; // size of each square of the grid, default value
 const int N {20}; // size of grid (grid itself is a square)
 
 STP3D::StandardMesh* groundMesh = nullptr; 
@@ -60,6 +60,10 @@ void disableLighting()
 
 void initScene(const std::string& jsonPath)
 {
+    // json init
+    initCircuit(jsonPath);
+    squareSize = (float)world_data.squareSize; // reading squareSize from json
+
     std::vector<float> points {0.0, 0.0, 0.0};
     somePoints.initSet(points, 1.0, 1.0, 1.0);
  
@@ -93,8 +97,6 @@ void initScene(const std::string& jsonPath)
     initMouth();
     // train station
     initTrainStation();
-    // json init
-    initCircuit(jsonPath);
     // vegetation
     srand(12);
     vegetationPositions = generate2DPositions(params);
