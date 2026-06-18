@@ -260,23 +260,23 @@ void Rail::drawPositionnedCurvedRails(GLBI_Engine& myEngine, float posX, float p
     switch (type)
     {
         case RailChoice::curvedTopRight:
-            tx    =  posX;
-            ty    =  posY + squareSize;
+            tx = posX;
+            ty = posY + squareSize;
             angle = M_PI+M_PI/2;
             break;
         case RailChoice::curvedTopLeft:
-            tx    = posX;
-            ty    = posY;
+            tx = posX;
+            ty = posY;
             angle = -M_PI-M_PI/2-M_PI/2;
             break;
         case RailChoice::curvedBottomRight:
-            tx    = posX + squareSize;
-            ty    = posY + squareSize;
+            tx = posX + squareSize;
+            ty = posY + squareSize;
             angle = M_PI;
             break;
         case RailChoice::curvedBottomLeft:
-            tx    = posX + squareSize;;
-            ty    = posY;
+            tx = posX + squareSize;;
+            ty = posY;
             angle = M_PI-M_PI/2;
             break;
         default:
