@@ -28,4 +28,4 @@ les *fleches directionnelles* servent à modifier l'angle de la caméra
 *(nb: Nous avons utilisé 'W' pour aller en bas car shift ou controle fonctionnait mais pas si on reste appuyer étrangement)*
 
 # Captures d'écran :
-Des captures d'écran sont présentes dans le dossier screenshots ainsi que dans le rapport. 
+Des captures d'écran sont présentes dans le dossier screenshots ainsi que dans le rapport.
